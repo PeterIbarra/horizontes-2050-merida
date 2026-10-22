@@ -104,6 +104,13 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:720px){.two{grid-template-columns:1fr}}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+/* Varias ruedas */
+.wbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.wbar .lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.wbar .wt{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-weight:700;font-size:13px;display:inline-flex;gap:6px;align-items:center}
+.wbar .wt i{width:10px;height:10px;border-radius:50%;background:var(--cc,var(--line))}
+.wbar .wt.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.ro .wbar .wt{cursor:default}
 /* Nube (estilo Menti) */
 .nubep{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--brand);border-radius:12px;padding:16px;display:grid;gap:12px}
 .nubep .hd{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
@@ -255,6 +262,7 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .pcard .cl{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:700}
 .pcard .cl i{width:12px;height:12px;border-radius:50%;background:var(--cc);flex:none}
 .pcard .stats{display:flex;gap:6px;flex-wrap:wrap}
+.pcard .tag{font-size:11px;font-weight:700;border-radius:4px;padding:2px 7px}
 .pcard .frase{font-style:italic;border-left:4px solid var(--brand);padding-left:10px;margin:0}
 .pcard ul{margin:0;padding-left:18px;font-size:13px;display:grid;gap:2px}
 .pcard h5{margin:4px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--brand)}
@@ -360,6 +368,7 @@ footer{font-size:12px;color:var(--muted)}
     </section>
 
     <section id="s2" style="display:grid;gap:16px;margin-top:4px" hidden>
+      <div class="wbar" id="wbar"></div>
       <div class="r2050"><b>2050</b><span>Imaginemos que ya llegamos a 2050: ¿cómo es Venezuela si este clúster se vuelve la tendencia?</span></div>
       <div class="rueda">
         <div class="wheelbox" id="wheel">
@@ -506,6 +515,18 @@ function renderClouds() {
   document.querySelectorAll(".nubep").forEach(p => p.classList.toggle("ed", canWrite));
   $("#ctext").disabled = $("#cadd").disabled = !canNote || !current;
 }
+const wheelsOf = g => [1, ...((g && g.ruedas) || []).map(r => r.n)];
+const activeOf = g => { const a = (g && g.activa) || 1; return wheelsOf(g).includes(a) ? a : 1; };
+const clusterOf = (g, n) => !g ? null : n === 1 ? g.cluster : (((g.ruedas || []).find(r => r.n === n)) || {}).cluster || null;
+function setCluster(gid, n, cid) { const g = state.groups[gid]; if (n === 1) patchGroup(gid, { cluster: cid }, 0); else patchGroup(gid, { ruedas: (g.ruedas || []).map(r => r.n === n ? { n: r.n, cluster: cid } : r) }, 0); }
+const notesOfW = (gid, n) => notesOf(gid).filter(([, x]) => (x.rueda || 1) === n);
+function renderWbar() {
+  const g = state.groups[current]; if (!g) { $("#wbar").innerHTML = ""; return; }
+  const ws = wheelsOf(g), act = activeOf(g);
+  $("#wbar").innerHTML = `<span class="lbl">Ruedas del grupo</span>` + ws.map(n => { const c = byId[clusterOf(g, n)]; return `<button class="wt${n === act ? " on" : ""}" ${canWrite ? `data-wsel="${n}"` : "disabled"} style="--cc:${c ? c.col : "var(--line)"}"><i></i>Rueda ${n}${c ? ` · ${c.id}` : ""}</button>`; }).join("")
+    + (canWrite ? `<button class="pill" data-wnew="1">+ Nueva rueda</button>${act > 1 ? `<button class="pill ghost" data-wdel="${act}">Eliminar rueda ${act}</button>` : ""}` : "");
+}
+let wdelArmed = false;
 const PUNTOS = 3;
 let ME = ""; try { ME = localStorage.getItem("tablero-merida-yo") || ""; if (!ME) { ME = "p" + uid(); localStorage.setItem("tablero-merida-yo", ME); } } catch (e) { ME = "p" + uid(); }
 const votosOf = gid => Object.entries(state.votos).filter(([, v]) => v.grupo === gid);
@@ -612,12 +633,12 @@ function renderClas() {
   const g = state.groups[current], v = tally(current);
   let list = CL.slice(); if (sortByVotes) list.sort((a, b) => (v[b.id] || 0) - (v[a.id] || 0));
   $("#cgrid").innerHTML = list.map(c => {
-    const n = v[c.id] || 0, chosen = g.cluster === c.id;
+    const act = activeOf(g), multi = wheelsOf(g).length > 1, n = v[c.id] || 0, chosen = clusterOf(g, act) === c.id, usedIn = wheelsOf(g).filter(k => k !== act && clusterOf(g, k) === c.id);
     return `<article class="ccard${chosen ? " chosen" : ""}" style="--cc:${c.col}">
       <div class="hd"><span class="code" style="${c.id === "C5" || c.id === "C7" || c.id === "C8" ? "color:#2b2100" : ""}">${c.id}</span><div><div class="nm">${esc(c.n)}</div><div class="ct">${c.s.length} señales${newOf(c.id).length ? ` · ${newOf(c.id).length} nueva${newOf(c.id).length > 1 ? "s" : ""}` : ""}</div></div></div>
       <div class="vote"><button data-vote="${c.id}" data-d="-1" aria-label="Quitar un voto a ${esc(c.n)}">−</button><span class="n">${n}</span><button data-vote="${c.id}" data-d="1" aria-label="Sumar un voto a ${esc(c.n)}">+</button><span class="dots">${"<i></i>".repeat(Math.min(n, 20))}</span></div>
       <details><summary>Ver señales</summary><ul>${c.s.map(([k, t]) => `<li><span>${k}</span>${esc(t)}</li>`).join("")}${newOf(c.id).map(k => `<li><span>${ncode(k)}</span>${esc(state.senales[k].nombre)}<span class="newtag">Nueva</span></li>`).join("")}</ul></details>
-      <div class="cfoot"><span class="ct">${chosen ? "En el centro de la rueda" : ""}</span><button class="pill${chosen ? " on" : ""}" data-choose="${c.id}">${chosen ? "Elegido" : "Elegir para la rueda"}</button></div>
+      <div class="cfoot"><span class="ct">${chosen ? `En el centro de la rueda${multi ? " " + act : ""}` : usedIn.length ? `Usado en la rueda ${usedIn.join(" y ")}` : ""}</span><button class="pill${chosen ? " on" : ""}" data-choose="${c.id}">${chosen ? "Elegido" : `Elegir para la rueda${multi ? " " + act : ""}`}</button></div>
     </article>`;
   }).join("");
   document.querySelectorAll("#cgrid button").forEach(b => b.disabled = !canWrite);
@@ -645,14 +666,15 @@ function renderNuevas() {
 }
 function renderRueda() {
   if (!current) return;
-  const g = state.groups[current], c = byId[g.cluster];
+  const g = state.groups[current], act = activeOf(g), c = byId[clusterOf(g, act)];
+  renderWbar();
   const sl = selOf(current);
   $("#wcenter").innerHTML = (c ? `<b>${c.id}</b>${esc(c.n)}<span class="y">→ 2050</span>` : "Elijan un clúster<br>en el paso 1") + (sl.length ? `<b style="margin-top:4px">+ ${sl.length} señal${sl.length > 1 ? "es" : ""} nueva${sl.length > 1 ? "s" : ""}</b>` : "");
   $("#wsel").innerHTML = sl.length ? `<span style="background:none;border:0;padding:4px 0;color:var(--muted)">Señales nuevas en la rueda:</span>` + sl.map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("") : "";
   $("#ringQ").innerHTML = `<span class="y2050">2050</span>` + esc(RINGQ[ring]);
   $("#actFields").hidden = ring !== "c";
   document.querySelectorAll("#ringSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === ring));
-  const ns = notesOf(current);
+  const ns = notesOfW(current, act);
   const box = $("#wheel"), S = box.clientWidth || 600, small = S < 520;
   const R = { a: 0.35, b: 0.61, c: 0.865 };
   let html = "";
@@ -678,21 +700,27 @@ function renderRueda() {
 function renderPlen() {
   const ids = groupIds();
   $("#pgrid").innerHTML = ids.map(id => {
-    const g = state.groups[id], c = byId[g.cluster], ns = notesOf(id).map(([, n]) => n);
-    const cnt = (r, t) => ns.filter(n => n.anillo === r && (!t || n.tipo === t)).length;
-    const top = r => ns.filter(n => n.anillo === r).slice(0, 3).map(n => `<li>${esc(n.texto)}${n.tipo === "accion" ? ` <span class="ct">(${esc(n.quien)})</span>` : ""}</li>`).join("");
+    const g = state.groups[id], c = byId[g.cluster];
     const pf = notesOf(id).some(([k]) => isFresh(k)) || selOf(id).some(isFresh) ? " flash" : "";
+    const ws = wheelsOf(g).filter(n => n === 1 || clusterOf(g, n) || notesOfW(id, n).length), multi = ws.length > 1;
+    const wheelHtml = n => {
+      const ns = notesOfW(id, n).map(([, x]) => x), cw = byId[clusterOf(g, n)];
+      const cnt = r => ns.filter(x => x.anillo === r).length;
+      const top = r => ns.filter(x => x.anillo === r).slice(0, 3).map(x => `<li>${esc(x.texto)}${x.tipo === "accion" ? ` <span class="ct">(${esc(x.quien)})</span>` : ""}</li>`).join("");
+      return `<div style="display:grid;gap:8px;${multi ? "border-top:1px solid var(--line);padding-top:8px" : ""}">
+        <div class="cl" style="--cc:${cw ? cw.col : "var(--line)"}"><i></i>${multi ? `Rueda ${n} · ` : ""}${cw ? `${cw.id} · ${esc(cw.n)}` : "Sin clúster elegido"}</div>
+        <div class="stats"><span class="tag" style="background:var(--na-soft);color:var(--na)">${cnt("a")} en a · país</span><span class="tag" style="background:var(--nb-soft);color:var(--nb)">${cnt("b")} en b · jóvenes</span><span class="tag" style="background:var(--nc-soft);color:var(--nc)">${cnt("c")} en c · acciones</span></div>
+        ${cnt("a") ? `<h5 style="color:var(--na)">a · País y Mérida</h5><ul>${top("a")}</ul>` : ""}
+        ${cnt("b") ? `<h5 style="color:var(--nb)">b · Juventud</h5><ul>${top("b")}</ul>` : ""}
+        ${cnt("c") ? `<h5 style="color:var(--nc)">c · Acciones</h5><ul>${top("c")}</ul>` : ""}
+      </div>`;
+    };
     return `<article class="pcard${pf}" style="--cc:${c ? c.col : "var(--line)"}">
       <h3>${esc(g.nombre || "Grupo")}</h3>
-      <div class="cl"><i></i>${c ? `${c.id} · ${esc(c.n)}` : "Sin clúster elegido"}</div>
       ${(() => { const tl = tally(id), top = CL.filter(k => tl[k.id]).sort((a, b) => tl[b.id] - tl[a.id]).slice(0, 3); return top.length ? `<div class="ct">Más votados: ${top.map(k => `${k.id} (${tl[k.id]})`).join(" · ")}</div>` : ""; })()}
       ${selOf(id).length ? `<div class="chips">${selOf(id).map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("")}</div>` : ""}
       ${(() => { const nw = cloudWords(nubeOf(id)).slice(0, 6); return nw.length ? `<div class="ct"><b>Así se imaginan Venezuela:</b> ${nw.map(w => esc(w.txt)).join(" · ")}</div>` : ""; })()}
-
-      <div class="stats"><span class="tag" style="background:var(--na-soft);color:var(--na)">${cnt("a")} en a · país</span><span class="tag" style="background:var(--nb-soft);color:var(--nb)">${cnt("b")} en b · jóvenes</span><span class="tag" style="background:var(--nc-soft);color:var(--nc)">${cnt("c")} en c · acciones</span></div>
-      ${cnt("a") ? `<h5 style="color:var(--na)">a · País y Mérida</h5><ul>${top("a")}</ul>` : ""}
-      ${cnt("b") ? `<h5 style="color:var(--nb)">b · Juventud</h5><ul>${top("b")}</ul>` : ""}
-      ${cnt("c") ? `<h5 style="color:var(--nc)">c · Acciones</h5><ul>${top("c")}</ul>` : ""}
+      ${ws.map(wheelHtml).join("")}
     </article>`;
   }).join("") || `<div class="empty">Todavía no hay grupos.</div>`;
 }
@@ -706,7 +734,15 @@ document.addEventListener("click", e => {
   if (t.dataset.vote) { castVote(current, t.dataset.vote, Number(t.dataset.d), false); return; }
   if (t.dataset.mv) { castVote(current, t.dataset.mv, Number(t.dataset.d), true); return; }
   if (t.dataset.vg) { current = t.dataset.vg; renderVote(); return; }
-  if (t.dataset.choose) { const g = state.groups[current]; patchGroup(current, { cluster: g.cluster === t.dataset.choose ? null : t.dataset.choose }, 0); renderClas(); return; }
+  if (t.dataset.choose) { const g = state.groups[current], act = activeOf(g); setCluster(current, act, clusterOf(g, act) === t.dataset.choose ? null : t.dataset.choose); renderClas(); return; }
+  if (t.dataset.wsel && canWrite) { patchGroup(current, { activa: Number(t.dataset.wsel) }, 0); render(); return; }
+  if (t.dataset.wnew && canWrite) { const g = state.groups[current], n = Math.max(...wheelsOf(g)) + 1; if (n > 20) return; patchGroup(current, { ruedas: [...(g.ruedas || []), { n, cluster: null }], activa: n }, 0); step = "1"; render(); showStatus(`Rueda ${n} creada. Elijan su clúster aquí en 1 · Clasificación y luego pasen a 2 · Trascendencia.`); setTimeout(() => showStatus(""), 6000); return; }
+  if (t.dataset.wdel && canWrite) {
+    if (!wdelArmed) { wdelArmed = true; t.textContent = "¿Seguro? Se borran sus notas · toca de nuevo"; t.classList.add("danger"); setTimeout(() => { wdelArmed = false; renderWbar(); }, 4000); return; }
+    wdelArmed = false; const n = Number(t.dataset.wdel), g = state.groups[current];
+    notesOfW(current, n).forEach(([k]) => deleteNote(k));
+    patchGroup(current, { ruedas: (g.ruedas || []).filter(r => r.n !== n), activa: 1 }, 0); render(); return;
+  }
   if (t.dataset.del) { deleteNote(t.dataset.del); return; }
   if (t.dataset.nf) { nfil = t.dataset.nf; renderNuevas(); return; }
   if (t.dataset.ssel && canWrite) { const g = state.groups[current], a = (g.nuevas || []).slice(), k = t.dataset.ssel; patchGroup(current, { nuevas: a.includes(k) ? a.filter(x => x !== k) : a.concat(k) }, 0); renderNuevas(); return; }
@@ -735,7 +771,7 @@ bindText("#gname", "nombre"); bindText("#grel", "relator"); bindText("#porque", 
 $("#noteForm").onsubmit = e => {
   e.preventDefault(); if (!canNote || !current) return;
   const texto = $("#ntext").value.trim(); if (!texto) { $("#ntext").focus(); return; }
-  const n = { grupo: current, anillo: ring, tipo: ring === "c" ? "accion" : "nota", texto: texto.slice(0, 500), t: Date.now() };
+  const n = { grupo: current, rueda: activeOf(state.groups[current]), anillo: ring, tipo: ring === "c" ? "accion" : "nota", texto: texto.slice(0, 500), t: Date.now() };
   if (ring === "c") { n.quien = $("#quien").value; n.cuando = $("#cuando").value; }
   addNote(n); $("#ntext").value = ""; $("#ntext").focus();
 };
@@ -788,24 +824,29 @@ try { const sp = new URLSearchParams(location.search); if (sp.get("g")) wantG = 
 /* ---------- exports ---------- */
 function csv() {
   const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const rows = [["grupo", "relator", "cluster", "anillo", "tipo", "texto", "quien", "cuando"]];
-  senalIds().forEach(k => { const s = state.senales[k], g = state.groups[s.grupo] || {}, c = byId[s.cluster]; rows.push([g.nombre || "", g.relator || "", c ? `${c.id} ${c.n}` : "Tema nuevo", "", "señal nueva " + ncode(k), s.nombre + (s.descripcion ? " — " + s.descripcion : ""), s.escala, ""]); });
-  groupIds().forEach(id => { const g = state.groups[id], c = byId[g.cluster]; notesOf(id).forEach(([, n]) => rows.push([g.nombre, g.relator, c ? `${c.id} ${c.n}` : "", n.anillo, n.tipo, n.texto, n.quien || "", n.cuando || ""])); });
+  const rows = [["grupo", "relator", "rueda", "cluster", "anillo", "tipo", "texto", "quien", "cuando"]];
+  senalIds().forEach(k => { const s = state.senales[k], g = state.groups[s.grupo] || {}, c = byId[s.cluster]; rows.push([g.nombre || "", g.relator || "", "", c ? `${c.id} ${c.n}` : "Tema nuevo", "", "señal nueva " + ncode(k), s.nombre + (s.descripcion ? " — " + s.descripcion : ""), s.escala, ""]); });
+  groupIds().forEach(id => { const g = state.groups[id]; notesOf(id).forEach(([, n]) => { const c = byId[clusterOf(g, n.rueda || 1)]; rows.push([g.nombre, g.relator, n.rueda || 1, c ? `${c.id} ${c.n}` : "", n.anillo, n.tipo, n.texto, n.quien || "", n.cuando || ""]); }); });
   return "﻿" + rows.map(r => r.map(q).join(",")).join("\n");
 }
 function md() {
   let o = "# Relatoría · Horizontes Venezuela 2050 · Mérida\n\n";
   groupIds().forEach(id => {
-    const g = state.groups[id], c = byId[g.cluster], ns = notesOf(id).map(([, n]) => n);
-    o += `## ${g.nombre}\n\nRelator/a: ${g.relator || "—"}\n\nClúster: ${c ? `${c.id} · ${c.full}` : "—"}\n\n`;
+    const g = state.groups[id];
+    const wsm = wheelsOf(g).filter(n => n === 1 || clusterOf(g, n) || notesOfW(id, n).length);
+    o += `## ${g.nombre}\n\nRelator/a: ${g.relator || "—"}\n\n` + wsm.map(n => { const cw = byId[clusterOf(g, n)]; return `${wsm.length > 1 ? `Rueda ${n} · ` : ""}Clúster: ${cw ? `${cw.id} · ${cw.full}` : "—"}`; }).join("\n\n") + "\n\n";
     const v = tally(id); const vs = CL.filter(k => v[k.id]).sort((a, b) => v[b.id] - v[a.id]).map(k => `${k.id} (${v[k.id]})`).join(", ");
     if (vs) o += `Votos: ${vs}\n\n`;
     if (g.porque) o += `**Por qué lo eligieron:** ${g.porque}\n\n`;
     if (selOf(id).length) o += `**Señales nuevas llevadas a la rueda:** ${selOf(id).map(k => `${ncode(k)} ${state.senales[k].nombre}`).join("; ")}\n\n`;
     if (g.movidas) o += `**Señales movidas de clúster:** ${g.movidas}\n\n`;
-    [["a", "Consecuencias para Venezuela y Mérida"], ["b", "Implicaciones para la juventud"], ["c", "Acciones desde hoy"]].forEach(([r, l]) => {
-      const it = ns.filter(n => n.anillo === r); if (!it.length) return;
-      o += `### ${r} · ${l}\n\n` + it.map(n => `- ${n.tipo === "accion" ? `${n.texto} (${n.quien}, ${n.cuando})` : n.texto}`).join("\n") + "\n\n";
+    wsm.forEach(w => {
+      const ns = notesOfW(id, w).map(([, n]) => n); if (!ns.length) return; const cw = byId[clusterOf(g, w)];
+      if (wsm.length > 1) o += `### Rueda ${w}${cw ? ` · ${cw.id} ${cw.n}` : ""}\n\n`;
+      [["a", "Consecuencias para Venezuela y Mérida"], ["b", "Implicaciones para la juventud"], ["c", "Acciones desde hoy"]].forEach(([r, l]) => {
+        const it = ns.filter(n => n.anillo === r); if (!it.length) return;
+        o += `${wsm.length > 1 ? "####" : "###"} ${r} · ${l}\n\n` + it.map(n => `- ${n.tipo === "accion" ? `${n.texto} (${n.quien}, ${n.cuando})` : n.texto}`).join("\n") + "\n\n";
+      });
     });
 
     const nw = cloudWords(nubeOf(id)); if (nw.length) o += `**Así me imagino Venezuela para 2050:** ${nw.map(w => w.c > 1 ? `${w.txt} (${w.c})` : w.txt).join(", ")}\n\n`;
