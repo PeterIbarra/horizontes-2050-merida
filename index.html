@@ -299,13 +299,13 @@ footer{font-size:12px;color:var(--muted)}
   <div class="robanner" id="robanner">Estás en <b>modo vista</b>: todo se actualiza en vivo. En <b>2 · Trascendencia</b> puedes sumar ideas a la rueda y escribir cómo te imaginas Venezuela para 2050. Los relatores entran con su código en <b>Acceso relator/a</b>.</div>
 
   <div class="steps" role="tablist">
-    <button role="tab" data-step="0" aria-selected="false">Universo de señales<small>132</small></button>
-    <button role="tab" data-step="1" aria-selected="true">1 · Clasificación<small>15 min</small></button>
+    <button role="tab" data-step="0" aria-selected="true">Universo de señales<small>132</small></button>
+    <button role="tab" data-step="1" aria-selected="false">1 · Clasificación<small>15 min</small></button>
     <button role="tab" data-step="2" aria-selected="false">2 · Trascendencia<small>25 min</small></button>
     <button role="tab" data-step="3" aria-selected="false">3 · Plenaria<small>todos los grupos</small></button>
   </div>
 
-  <section id="s0" style="display:grid;gap:14px" hidden>
+  <section id="s0" style="display:grid;gap:14px">
     <div class="bar">
       <input id="q" type="search" placeholder="Buscar una señal…" aria-label="Buscar una señal" style="flex:1;min-width:200px;max-width:420px;border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:var(--surface)">
       <button class="pill" id="uopen" aria-pressed="false">Ver todo con implicaciones a 2050</button>
@@ -322,7 +322,7 @@ footer{font-size:12px;color:var(--muted)}
     <button class="pill" id="vexit" style="justify-self:start">Ir al tablero completo</button>
   </section>
 
-  <div id="groupArea" style="display:grid;gap:16px">
+  <div id="groupArea" style="display:grid;gap:16px" hidden>
   <div class="groups" id="groups">
     <span class="lbl">Grupos</span>
     <span id="gchips" style="display:contents"></span>
@@ -433,7 +433,7 @@ const SB_URL = "https://uqcsnzljeiouzjrclecm.supabase.co";
 const SB_KEY = "sb_publishable_mKy3trJA5vDi3MUSOIP69g_Ea2A-u9C";
 let sb = null, sbW = null, canWrite = false, canNote = true, relCode = "";
 const state = { groups: {}, notes: {}, senales: {}, votos: {}, nube: {} };
-let current = null, step = "1", ring = "a", ntype = "oportunidad", sortByVotes = false;
+let current = null, step = "0", ring = "a", ntype = "oportunidad", sortByVotes = false;
 const queues = {};
 function enqueue(key, fn) { queues[key] = (queues[key] || Promise.resolve()).then(async () => { const r = await fn(); if (r && r.error) throw r.error; }).catch(handleErr); return queues[key]; }
 function handleErr(e) {
