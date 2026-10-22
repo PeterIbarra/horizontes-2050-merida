@@ -717,7 +717,7 @@ function renderPlen() {
     };
     return `<article class="pcard${pf}" style="--cc:${c ? c.col : "var(--line)"}">
       <h3>${esc(g.nombre || "Grupo")}</h3>
-      ${(() => { const tl = tally(id), top = CL.filter(k => tl[k.id]).sort((a, b) => tl[b.id] - tl[a.id]).slice(0, 3); return top.length ? `<div class="ct">Más votados: ${top.map(k => `${k.id} (${tl[k.id]})`).join(" · ")}</div>` : ""; })()}
+      ${(() => { const tl = tally(id), top = CL.filter(k => tl[k.id]).sort((a, b) => tl[b.id] - tl[a.id]).slice(0, 3); return top.length ? `<div class="ct"><b>Más votados:</b> ${top.map(k => `${esc(k.n)} (${tl[k.id]} voto${tl[k.id] === 1 ? "" : "s"})`).join(" · ")}</div>` : ""; })()}
       ${selOf(id).length ? `<div class="chips">${selOf(id).map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("")}</div>` : ""}
       ${(() => { const nw = cloudWords(nubeOf(id)).slice(0, 6); return nw.length ? `<div class="ct"><b>Así se imaginan Venezuela:</b> ${nw.map(w => esc(w.txt)).join(" · ")}</div>` : ""; })()}
       ${ws.map(wheelHtml).join("")}
@@ -835,7 +835,7 @@ function md() {
     const g = state.groups[id];
     const wsm = wheelsOf(g).filter(n => n === 1 || clusterOf(g, n) || notesOfW(id, n).length);
     o += `## ${g.nombre}\n\nRelator/a: ${g.relator || "—"}\n\n` + wsm.map(n => { const cw = byId[clusterOf(g, n)]; return `${wsm.length > 1 ? `Rueda ${n} · ` : ""}Clúster: ${cw ? `${cw.id} · ${cw.full}` : "—"}`; }).join("\n\n") + "\n\n";
-    const v = tally(id); const vs = CL.filter(k => v[k.id]).sort((a, b) => v[b.id] - v[a.id]).map(k => `${k.id} (${v[k.id]})`).join(", ");
+    const v = tally(id); const vs = CL.filter(k => v[k.id]).sort((a, b) => v[b.id] - v[a.id]).map(k => `${k.n} (${v[k.id]})`).join(", ");
     if (vs) o += `Votos: ${vs}\n\n`;
     if (g.porque) o += `**Por qué lo eligieron:** ${g.porque}\n\n`;
     if (selOf(id).length) o += `**Señales nuevas llevadas a la rueda:** ${selOf(id).map(k => `${ncode(k)} ${state.senales[k].nombre}`).join("; ")}\n\n`;
