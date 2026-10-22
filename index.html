@@ -11,19 +11,12 @@
 <style>
 /* Layout: working board — header with groups + timer, three step tabs, each step a focused workspace */
 :root{
-  --bg:#f3f6f9; --surface:#ffffff; --sunk:#eef3f8; --ink:#12263a; --muted:#536577; --line:#d3dde7;
+  --bg:#e9f2fa; --surface:#ffffff; --sunk:#eef5fb; --ink:#12263a; --muted:#4d6176; --line:#cddfee; color-scheme:light;
   --brand:#0468b1; --brand-soft:#e1eef8; --ok:#2e7d32; --ok-soft:#e6f2e7; --risk:#b3261e; --risk-soft:#fbe9e7; --act:#0468b1; --act-soft:#e1eef8;
   --ring-a:#5fa3d9; --ring-b:#a9cdeb; --ring-c:#dcebf6; --center:#0468b1; --band:#0468b1; --new:#0468b1; --new-soft:#e1eef8;
   --display:"Montserrat","Helvetica Neue",Arial,sans-serif; --body:"Nunito Sans",system-ui,Arial,sans-serif;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0b1a29; --surface:#122638; --sunk:#0f2131; --ink:#e8eff5; --muted:#9fb1c2; --line:#24394d;
-  --brand:#5aaee8; --brand-soft:#16344f; --ok:#7cc483; --ok-soft:#173a26; --risk:#f08a80; --risk-soft:#3d1d1b; --act:#5aaee8; --act-soft:#16344f;
-  --ring-a:#2f6fa3; --ring-b:#24557d; --ring-c:#1a3c58; --center:#5aaee8; --band:#0a4f86; --new:#5aaee8; --new-soft:#16344f; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0b1a29; --surface:#122638; --sunk:#0f2131; --ink:#e8eff5; --muted:#9fb1c2; --line:#24394d;
-  --brand:#5aaee8; --brand-soft:#16344f; --ok:#7cc483; --ok-soft:#173a26; --risk:#f08a80; --risk-soft:#3d1d1b; --act:#5aaee8; --act-soft:#16344f;
-  --ring-a:#2f6fa3; --ring-b:#24557d; --ring-c:#1a3c58; --center:#5aaee8; --band:#0a4f86; --new:#5aaee8; --new-soft:#16344f; color-scheme:dark}
+
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
@@ -40,6 +33,7 @@ button{cursor:pointer}
 .top .timer{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28);border-radius:18px}
 .top .pill{background:transparent;border-color:rgba(255,255,255,.5);color:#fff}
 .top .pill.primary{background:#fff;border-color:#fff;color:var(--band)}
+.top .pill.on{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.6);color:#fff}
 .top :focus-visible{outline-color:#fff}
 @media (max-width:560px){.top .timer{border-radius:14px}}
 .brandrow{display:flex;gap:14px;align-items:center;min-width:0;flex:1 1 320px}
@@ -347,7 +341,6 @@ footer{font-size:12px;color:var(--muted)}
           <h3>Agregar una idea</h3>
           <div class="seg ring" id="ringSeg"><button data-v="a" aria-pressed="true">a · País y Mérida</button><button data-v="b" aria-pressed="false">b · Juventud</button><button data-v="c" aria-pressed="false">c · Acciones</button></div>
           <p class="hint" id="ringQ"></p>
-          <div class="seg type" id="typeSeg"><button data-v="oportunidad" aria-pressed="true">Oportunidad</button><button data-v="riesgo" aria-pressed="false">Riesgo</button></div>
           <div class="two" id="actFields" hidden>
             <div class="field"><label for="quien">¿Quién?</label><select id="quien"><option>Estudiantes</option><option>Universidad</option><option>Comunidad</option><option>Instituciones</option><option>Empresas</option><option>Varios</option></select></div>
             <div class="field"><label for="cuando">¿Cuándo?</label><select id="cuando"><option>Ya</option><option>Antes de 2030</option><option>Hacia 2050</option></select></div>
@@ -388,8 +381,8 @@ const CL = [{"id": "C1", "n": "Universidad bajo presión", "full": "Universidad 
 const byId = Object.fromEntries(CL.map(c => [c.id, c]));
 const RINGQ = {
   a: "Si este clúster se vuelve la tendencia dominante hacia 2050, ¿cómo cambiarían Venezuela y Mérida?",
-  b: "¿Qué significaría para los jóvenes merideños: cómo estudian, trabajan, se cuidan y deciden si quedarse o irse?",
-  c: "¿Qué podemos hacer desde ahora para aprovechar lo positivo y evitar lo negativo?"
+  b: "¿Qué significaría para los jóvenes?",
+  c: "¿Qué podemos hacer desde ahora para aprovechar lo positivo o evitar lo negativo?"
 };
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
@@ -589,9 +582,8 @@ function renderRueda() {
   $("#wcenter").innerHTML = (c ? `<b>${c.id}</b>${esc(c.n)}` : "Elijan un clúster<br>en el paso 1") + (sl.length ? `<b style="margin-top:4px">+ ${sl.length} señal${sl.length > 1 ? "es" : ""} nueva${sl.length > 1 ? "s" : ""}</b>` : "");
   $("#wsel").innerHTML = sl.length ? `<span style="background:none;border:0;padding:4px 0;color:var(--muted)">Señales nuevas en la rueda:</span>` + sl.map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("") : "";
   $("#ringQ").textContent = RINGQ[ring];
-  $("#typeSeg").hidden = ring === "c"; $("#actFields").hidden = ring !== "c";
+  $("#actFields").hidden = ring !== "c";
   document.querySelectorAll("#ringSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === ring));
-  document.querySelectorAll("#typeSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === ntype));
   const ns = notesOf(current);
   const box = $("#wheel"), S = box.clientWidth || 600, small = S < 520;
   const R = { a: 0.35, b: 0.61, c: 0.865 };
@@ -601,7 +593,7 @@ function renderRueda() {
     items.forEach(([id, n], i) => {
       const ang = -Math.PI / 2 + (i + 0.5) * 2 * Math.PI / Math.max(k, 1) + ri * 0.35;
       const x = 50 + R[r] * 50 * Math.cos(ang), y = 50 + R[r] * 50 * Math.sin(ang);
-      const tc = n.tipo === "riesgo" ? "var(--risk)" : n.tipo === "accion" ? "var(--act)" : "var(--ok)";
+      const tc = { a: "#0468b1", b: "#3d8fd1", c: "#0a3d6b" }[n.anillo] || "var(--brand)";
       html += small ? `<span class="dot${fl(id)}" style="left:${x}%;top:${y}%;--tc:${tc}" title="${esc(n.texto)}"></span>`
         : `<div class="sticky${fl(id)}" style="left:${x}%;top:${y}%;--tc:${tc}" title="${esc(n.texto)}">${esc(n.texto)}</div>`;
     });
@@ -612,7 +604,7 @@ function renderRueda() {
   $("#lists").innerHTML = ["a", "b", "c"].map(r => {
     const items = ns.filter(([, n]) => n.anillo === r);
     return `<div class="lst" style="--rc:${rc[r]}"><h4><span class="badge">${r}</span>${lab[r].slice(4)} <span class="ct">(${items.length})</span></h4>${items.length ? `<ul>${items.map(([id, n]) =>
-      `<li class="${fl(id).trim()}"><span class="tag ${n.tipo}">${n.tipo === "accion" ? "Acción" : n.tipo === "riesgo" ? "Riesgo" : "Oportunidad"}</span><span class="tx">${esc(n.texto)}${n.tipo === "accion" ? `<span class="who">${esc(n.quien)} · ${esc(n.cuando)}</span>` : ""}</span>${canWrite ? `<button data-del="${id}" aria-label="Borrar nota">×</button>` : ""}</li>`).join("")}</ul>` : `<p class="none">Aún no hay ideas en este anillo.</p>`}</div>`;
+      `<li class="${fl(id).trim()}"><span class="tx">${esc(n.texto)}${n.tipo === "accion" ? `<span class="who">${esc(n.quien)} · ${esc(n.cuando)}</span>` : ""}</span>${canWrite ? `<button data-del="${id}" aria-label="Borrar nota">×</button>` : ""}</li>`).join("")}</ul>` : `<p class="none">Aún no hay ideas en este anillo.</p>`}</div>`;
   }).join("");
 }
 function renderPlen() {
@@ -628,7 +620,7 @@ function renderPlen() {
       ${(() => { const tl = tally(id), top = CL.filter(k => tl[k.id]).sort((a, b) => tl[b.id] - tl[a.id]).slice(0, 3); return top.length ? `<div class="ct">Más votados: ${top.map(k => `${k.id} (${tl[k.id]})`).join(" · ")}</div>` : ""; })()}
       ${selOf(id).length ? `<div class="chips">${selOf(id).map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("")}</div>` : ""}
       ${g.frase ? `<p class="frase">«${esc(g.frase)}»</p>` : ""}
-      <div class="stats"><span class="tag oportunidad">${cnt("a", "oportunidad") + cnt("b", "oportunidad")} oportunidades</span><span class="tag riesgo">${cnt("a", "riesgo") + cnt("b", "riesgo")} riesgos</span><span class="tag accion">${cnt("c")} acciones</span></div>
+      <div class="stats"><span class="tag accion">${cnt("a")} en a · país</span><span class="tag accion">${cnt("b")} en b · jóvenes</span><span class="tag accion">${cnt("c")} en c · acciones</span></div>
       ${cnt("a") ? `<h5>a · País y Mérida</h5><ul>${top("a")}</ul>` : ""}
       ${cnt("b") ? `<h5>b · Juventud</h5><ul>${top("b")}</ul>` : ""}
       ${cnt("c") ? `<h5>c · Acciones</h5><ul>${top("c")}</ul>` : ""}
@@ -650,8 +642,7 @@ document.addEventListener("click", e => {
   if (t.dataset.nf) { nfil = t.dataset.nf; renderNuevas(); return; }
   if (t.dataset.ssel && canWrite) { const g = state.groups[current], a = (g.nuevas || []).slice(), k = t.dataset.ssel; patchGroup(current, { nuevas: a.includes(k) ? a.filter(x => x !== k) : a.concat(k) }, 0); renderNuevas(); return; }
   if (t.dataset.sdel && canWrite) { deleteSenal(t.dataset.sdel); return; }
-  if (t.closest("#ringSeg")) { ring = t.dataset.v; if (ring === "c") ntype = "accion"; else if (ntype === "accion") ntype = "oportunidad"; renderRueda(); $("#ntext").focus(); return; }
-  if (t.closest("#typeSeg")) { ntype = t.dataset.v; renderRueda(); return; }
+  if (t.closest("#ringSeg")) { ring = t.dataset.v; renderRueda(); $("#ntext").focus(); return; }
 });
 $("#vexit").onclick = () => { step = "1"; setMode("tablero"); };
 $("#rproj").onclick = async () => { const r = $("#res"); try { if (document.fullscreenElement) await document.exitFullscreen(); else await r.requestFullscreen(); } catch (e) { showStatus("Esta vista no permite pantalla completa; usa el zoom del navegador para proyectar.", true); } };
@@ -675,7 +666,7 @@ bindText("#frase", "frase"); bindText("#citas", "citas"); bindText("#desac", "de
 $("#noteForm").onsubmit = e => {
   e.preventDefault(); if (!canNote || !current) return;
   const texto = $("#ntext").value.trim(); if (!texto) { $("#ntext").focus(); return; }
-  const n = { grupo: current, anillo: ring, tipo: ring === "c" ? "accion" : ntype, texto: texto.slice(0, 500), t: Date.now() };
+  const n = { grupo: current, anillo: ring, tipo: ring === "c" ? "accion" : "nota", texto: texto.slice(0, 500), t: Date.now() };
   if (ring === "c") { n.quien = $("#quien").value; n.cuando = $("#cuando").value; }
   addNote(n); $("#ntext").value = ""; $("#ntext").focus();
 };
@@ -729,7 +720,7 @@ function md() {
     if (g.movidas) o += `**Señales movidas de clúster:** ${g.movidas}\n\n`;
     [["a", "Consecuencias para Venezuela y Mérida"], ["b", "Implicaciones para la juventud"], ["c", "Acciones desde hoy"]].forEach(([r, l]) => {
       const it = ns.filter(n => n.anillo === r); if (!it.length) return;
-      o += `### ${r} · ${l}\n\n` + it.map(n => `- ${n.tipo === "accion" ? `${n.texto} (${n.quien}, ${n.cuando})` : `[${n.tipo}] ${n.texto}`}`).join("\n") + "\n\n";
+      o += `### ${r} · ${l}\n\n` + it.map(n => `- ${n.tipo === "accion" ? `${n.texto} (${n.quien}, ${n.cuando})` : n.texto}`).join("\n") + "\n\n";
     });
     if (g.frase) o += `**Frase del grupo:** «${g.frase}»\n\n`;
     if (g.citas) o += `**Citas:** ${g.citas}\n\n`;
