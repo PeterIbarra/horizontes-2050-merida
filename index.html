@@ -13,7 +13,7 @@
 :root{
   --bg:#e9f2fa; --surface:#ffffff; --sunk:#eef5fb; --ink:#12263a; --muted:#4d6176; --line:#cddfee; color-scheme:light;
   --brand:#0468b1; --brand-soft:#e1eef8; --ok:#2e7d32; --ok-soft:#e6f2e7; --risk:#b3261e; --risk-soft:#fbe9e7; --act:#0468b1; --act-soft:#e1eef8;
-  --na:#0468b1; --na-soft:#e1eef8; --nb:#1f8a3b; --nb-soft:#e2f3e6; --nc:#e2600f; --nc-soft:#fde8da; --ring-a:#0468b1; --ring-b:#1f8a3b; --ring-c:#e2600f; --center:#0a2a4a; --band:#0468b1; --new:#0468b1; --new-soft:#e1eef8;
+  --na:#0468b1; --na-soft:#e1eef8; --nb:#1f8a3b; --nb-soft:#e2f3e6; --nc:#e2600f; --nc-soft:#fde8da; --ring-a:#8fc0e8; --ring-b:#b7d5ef; --ring-c:#d7e7f6; --center:#0468b1; --band:#0468b1; --new:#0468b1; --new-soft:#e1eef8;
   --display:"Montserrat","Helvetica Neue",Arial,sans-serif; --body:"Nunito Sans",system-ui,Arial,sans-serif;
 }
 
@@ -209,9 +209,14 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .wheelbox svg{position:absolute;inset:0;width:100%;height:100%}
 .wcenter{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:30%;text-align:center;color:#fff;font-family:var(--display);font-weight:700;font-size:13px;line-height:1.2;pointer-events:none}
 .wcenter b{display:block;font-size:12px;opacity:.85}
-.wlabel{position:absolute;transform:translate(-50%,-50%);font-family:var(--display);font-weight:800;font-size:20px;color:#fff;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.25)}
-.sticky{position:absolute;transform:translate(-50%,-50%);width:104px;background:#fff;color:#12263a;border:2px solid #fff;border-left:7px solid var(--tc);border-radius:6px;padding:4px 6px;font-size:11px;line-height:1.25;box-shadow:0 2px 6px rgba(0,0,0,.28);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.dot{position:absolute;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;background:#fff;border:4px solid var(--tc)}
+.wcenter .y{display:block;font-size:clamp(16px,2.4vw,26px);font-weight:800;opacity:1;margin-top:4px;letter-spacing:.02em}
+.r2050{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 4px}
+.r2050 b{font-family:var(--display);font-weight:800;font-size:clamp(34px,5vw,56px);line-height:1;color:var(--brand);letter-spacing:-.02em}
+.r2050 span{font-family:var(--display);font-weight:700;font-size:16px;color:var(--ink)}
+.y2050{display:inline-block;background:var(--brand);color:#fff;font-family:var(--display);font-weight:800;border-radius:6px;padding:1px 8px;font-size:13px;margin-right:6px;vertical-align:1px}
+.wlabel{position:absolute;transform:translate(-50%,-50%);font-family:var(--display);font-weight:800;font-size:20px;color:#0a3d6b;pointer-events:none}
+.sticky{position:absolute;transform:translate(-50%,-50%);width:104px;background:var(--tc);color:#fff;font-weight:700;border:2px solid #fff;border-radius:6px;padding:4px 6px;font-size:11px;line-height:1.25;box-shadow:0 2px 6px rgba(0,0,0,.28);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.dot{position:absolute;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;background:var(--tc);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px}
 .panel h3{font-family:var(--display);font-size:16px;margin:0}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
@@ -231,7 +236,9 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .lst h4 .badge{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px;background:var(--rc);color:#fff}
 .lst h4{color:var(--rc)}
 .lst ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.lst li{display:flex;gap:8px;align-items:flex-start;background:var(--rs);border-left:4px solid var(--rc);border-radius:8px;padding:6px 8px;font-size:14px}
+.lst li{display:flex;gap:8px;align-items:flex-start;background:var(--rc);color:#fff;font-weight:600;border-radius:8px;padding:7px 10px;font-size:14px}
+.lst li .who{color:rgba(255,255,255,.85)!important}
+.lst li button{color:rgba(255,255,255,.85)!important}
 .lst li .tag{font-size:11px;font-weight:700;border-radius:4px;padding:1px 6px;flex:none;margin-top:2px}
 .tag.oportunidad{background:var(--ok-soft);color:var(--ok)}
 .tag.riesgo{background:var(--risk-soft);color:var(--risk)}
@@ -351,9 +358,10 @@ footer{font-size:12px;color:var(--muted)}
     </section>
 
     <section id="s2" style="display:grid;gap:16px;margin-top:4px" hidden>
+      <div class="r2050"><b>2050</b><span>Imaginemos que ya llegamos a 2050: ¿cómo es Venezuela si este clúster se vuelve la tendencia?</span></div>
       <div class="rueda">
         <div class="wheelbox" id="wheel">
-          <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="99" style="fill:var(--ring-c)"/><circle cx="100" cy="100" r="74" style="fill:var(--ring-b);stroke:#fff;stroke-width:1.6"/><circle cx="100" cy="100" r="48" style="fill:var(--ring-a);stroke:#fff;stroke-width:1.6"/><circle cx="100" cy="100" r="22" style="fill:var(--center);stroke:#fff;stroke-width:1.6"/></svg>
+          <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="99" style="fill:var(--ring-c);stroke:#b7d5ef;stroke-width:1"/><circle cx="100" cy="100" r="74" style="fill:var(--ring-b);stroke:#fff;stroke-width:1.6"/><circle cx="100" cy="100" r="48" style="fill:var(--ring-a);stroke:#fff;stroke-width:1.6"/><circle cx="100" cy="100" r="22" style="fill:var(--center);stroke:#fff;stroke-width:1.6"/></svg>
           <div class="wlabel" style="left:50%;top:6.8%">c</div><div class="wlabel" style="left:50%;top:19.5%">b</div><div class="wlabel" style="left:50%;top:32.5%">a</div>
           <div class="wcenter" id="wcenter"></div>
           <div id="wnotes"></div>
@@ -361,7 +369,7 @@ footer{font-size:12px;color:var(--muted)}
         <div class="panel">
           <h3>Agregar una idea</h3>
           <div class="seg ring" id="ringSeg"><button data-v="a" aria-pressed="true">a · País y Mérida</button><button data-v="b" aria-pressed="false">b · Juventud</button><button data-v="c" aria-pressed="false">c · Acciones</button></div>
-          <p class="hint" id="ringQ"></p>
+          <p class="hint" id="ringQ" style="font-style:normal;color:var(--ink)"></p>
           <div class="two" id="actFields" hidden>
             <div class="field"><label for="quien">¿Quién?</label><select id="quien"><option>Estudiantes</option><option>Universidad</option><option>Comunidad</option><option>Instituciones</option><option>Empresas</option><option>Varios</option></select></div>
             <div class="field"><label for="cuando">¿Cuándo?</label><select id="cuando"><option>Ya</option><option>Antes de 2030</option><option>Hacia 2050</option></select></div>
@@ -634,9 +642,9 @@ function renderRueda() {
   if (!current) return;
   const g = state.groups[current], c = byId[g.cluster];
   const sl = selOf(current);
-  $("#wcenter").innerHTML = (c ? `<b>${c.id}</b>${esc(c.n)}` : "Elijan un clúster<br>en el paso 1") + (sl.length ? `<b style="margin-top:4px">+ ${sl.length} señal${sl.length > 1 ? "es" : ""} nueva${sl.length > 1 ? "s" : ""}</b>` : "");
+  $("#wcenter").innerHTML = (c ? `<b>${c.id}</b>${esc(c.n)}<span class="y">→ 2050</span>` : "Elijan un clúster<br>en el paso 1") + (sl.length ? `<b style="margin-top:4px">+ ${sl.length} señal${sl.length > 1 ? "es" : ""} nueva${sl.length > 1 ? "s" : ""}</b>` : "");
   $("#wsel").innerHTML = sl.length ? `<span style="background:none;border:0;padding:4px 0;color:var(--muted)">Señales nuevas en la rueda:</span>` + sl.map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("") : "";
-  $("#ringQ").textContent = RINGQ[ring];
+  $("#ringQ").innerHTML = `<span class="y2050">2050</span>` + esc(RINGQ[ring]);
   $("#actFields").hidden = ring !== "c";
   document.querySelectorAll("#ringSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === ring));
   const ns = notesOf(current);
