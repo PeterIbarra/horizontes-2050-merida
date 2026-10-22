@@ -13,7 +13,7 @@
 :root{
   --bg:#e9f2fa; --surface:#ffffff; --sunk:#eef5fb; --ink:#12263a; --muted:#4d6176; --line:#cddfee; color-scheme:light;
   --brand:#0468b1; --brand-soft:#e1eef8; --ok:#2e7d32; --ok-soft:#e6f2e7; --risk:#b3261e; --risk-soft:#fbe9e7; --act:#0468b1; --act-soft:#e1eef8;
-  --ring-a:#5fa3d9; --ring-b:#a9cdeb; --ring-c:#dcebf6; --center:#0468b1; --band:#0468b1; --new:#0468b1; --new-soft:#e1eef8;
+  --na:#0468b1; --na-soft:#e1eef8; --nb:#2e7d32; --nb-soft:#e3f1e4; --nc:#c2410c; --nc-soft:#fde8dc; --ring-a:#5fa3d9; --ring-b:#a9cdeb; --ring-c:#dcebf6; --center:#0468b1; --band:#0468b1; --new:#0468b1; --new-soft:#e1eef8;
   --display:"Montserrat","Helvetica Neue",Arial,sans-serif; --body:"Nunito Sans",system-ui,Arial,sans-serif;
 }
 
@@ -210,13 +210,16 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .wcenter{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:30%;text-align:center;color:#fff;font-family:var(--display);font-weight:700;font-size:13px;line-height:1.2;pointer-events:none}
 .wcenter b{display:block;font-size:12px;opacity:.85}
 .wlabel{position:absolute;transform:translate(-50%,-50%);font-family:var(--display);font-weight:800;font-size:18px;color:var(--ink);pointer-events:none}
-.sticky{position:absolute;transform:translate(-50%,-50%);width:104px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--tc);border-radius:6px;padding:4px 6px;font-size:11px;line-height:1.25;box-shadow:0 1px 3px rgba(0,0,0,.12);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sticky{position:absolute;transform:translate(-50%,-50%);width:104px;background:var(--ts);border:1px solid var(--tc);border-left:6px solid var(--tc);border-radius:6px;padding:4px 6px;font-size:11px;line-height:1.25;box-shadow:0 1px 3px rgba(0,0,0,.12);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .dot{position:absolute;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:var(--tc);border:2px solid var(--surface)}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px}
 .panel h3{font-family:var(--display);font-size:16px;margin:0}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px}
 .seg button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+#ringSeg button{border-left:5px solid var(--rcol)}
+#ringSeg button[data-v="a"]{--rcol:var(--na)}#ringSeg button[data-v="b"]{--rcol:var(--nb)}#ringSeg button[data-v="c"]{--rcol:var(--nc)}
+#ringSeg button[aria-pressed="true"]{background:var(--rcol);border-color:var(--rcol)}
 .seg.type button[data-v="oportunidad"][aria-pressed="true"]{background:var(--ok);border-color:var(--ok)}
 .seg.type button[data-v="riesgo"][aria-pressed="true"]{background:var(--risk);border-color:var(--risk)}
 .hint{font-size:13px;color:var(--muted);font-style:italic;margin:0}
@@ -224,9 +227,11 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 @media (max-width:980px){.lists{grid-template-columns:1fr}}
 .lst{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:8px;align-content:start}
 .lst h4{margin:0;font-family:var(--display);font-size:14px;display:flex;gap:8px;align-items:center}
-.lst h4 .badge{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px;background:var(--rc);color:var(--ink)}
+.lst{border-top:5px solid var(--rc)!important}
+.lst h4 .badge{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px;background:var(--rc);color:#fff}
+.lst h4{color:var(--rc)}
 .lst ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.lst li{display:flex;gap:8px;align-items:flex-start;background:var(--sunk);border-radius:8px;padding:6px 8px;font-size:14px}
+.lst li{display:flex;gap:8px;align-items:flex-start;background:var(--rs);border-left:4px solid var(--rc);border-radius:8px;padding:6px 8px;font-size:14px}
 .lst li .tag{font-size:11px;font-weight:700;border-radius:4px;padding:1px 6px;flex:none;margin-top:2px}
 .tag.oportunidad{background:var(--ok-soft);color:var(--ok)}
 .tag.riesgo{background:var(--risk-soft);color:var(--risk)}
@@ -369,10 +374,6 @@ footer{font-size:12px;color:var(--muted)}
       </div>
       <div class="chips" id="wsel"></div>
       <div class="lists" id="lists"></div>
-      <div class="panel">
-        <h3>Síntesis del grupo para la plenaria</h3>
-        <div class="field"><label for="frase">Nuestra frase sobre Mérida en 2050</label><input id="frase" maxlength="240"></div>
-      </div>
       <div class="nubep" id="nubeG">
         <div class="hd"><div><h3>Así me imagino Venezuela para 2050</h3><div class="sub" id="nsubG">Escribe una palabra o frase corta. Las que más se repiten se ven más grandes.</div></div><button class="pill" data-proj="nubeG">Proyectar</button></div>
         <form class="cform" id="cform"><input id="ctext" maxlength="40" placeholder="Una palabra o frase corta" aria-label="Así me imagino Venezuela para 2050" autocomplete="off"><button class="pill primary" id="cadd">Enviar</button></form>
@@ -572,7 +573,7 @@ function render() {
   const g = state.groups[current];
   setVal($("#gname"), g.nombre); setVal($("#grel"), g.relator);
   setVal($("#porque"), g.porque); setVal($("#movidas"), g.movidas);
-  setVal($("#frase"), g.frase);
+
   ["1", "2", "3"].forEach(s => $("#s" + s).hidden = s !== step);
   if (step === "1") renderClas(); if (step === "2") renderRueda(); if (step === "3") renderPlen();
   if (step === "2" || step === "3") renderClouds();
@@ -647,17 +648,17 @@ function renderRueda() {
     items.forEach(([id, n], i) => {
       const ang = -Math.PI / 2 + (i + 0.5) * 2 * Math.PI / Math.max(k, 1) + ri * 0.35;
       const x = 50 + R[r] * 50 * Math.cos(ang), y = 50 + R[r] * 50 * Math.sin(ang);
-      const tc = { a: "#0468b1", b: "#3d8fd1", c: "#0a3d6b" }[n.anillo] || "var(--brand)";
+      const tc = `var(--n${n.anillo})`, ts = `var(--n${n.anillo}-soft)`;
       html += small ? `<span class="dot${fl(id)}" style="left:${x}%;top:${y}%;--tc:${tc}" title="${esc(n.texto)}"></span>`
-        : `<div class="sticky${fl(id)}" style="left:${x}%;top:${y}%;--tc:${tc}" title="${esc(n.texto)}">${esc(n.texto)}</div>`;
+        : `<div class="sticky${fl(id)}" style="left:${x}%;top:${y}%;--tc:${tc};--ts:${ts}" title="${esc(n.texto)}">${esc(n.texto)}</div>`;
     });
   });
   $("#wnotes").innerHTML = html;
   const lab = { a: "a · Consecuencias para Venezuela y Mérida", b: "b · Implicaciones para la juventud", c: "c · Acciones desde hoy" };
-  const rc = { a: "var(--ring-a)", b: "var(--ring-b)", c: "var(--ring-c)" };
+  const rc = { a: "var(--na)", b: "var(--nb)", c: "var(--nc)" };
   $("#lists").innerHTML = ["a", "b", "c"].map(r => {
     const items = ns.filter(([, n]) => n.anillo === r);
-    return `<div class="lst" style="--rc:${rc[r]}"><h4><span class="badge">${r}</span>${lab[r].slice(4)} <span class="ct">(${items.length})</span></h4>${items.length ? `<ul>${items.map(([id, n]) =>
+    return `<div class="lst" style="--rc:${rc[r]};--rs:var(--n${r}-soft)"><h4><span class="badge">${r}</span>${lab[r].slice(4)} <span class="ct">(${items.length})</span></h4>${items.length ? `<ul>${items.map(([id, n]) =>
       `<li class="${fl(id).trim()}"><span class="tx">${esc(n.texto)}${n.tipo === "accion" ? `<span class="who">${esc(n.quien)} · ${esc(n.cuando)}</span>` : ""}</span>${canWrite ? `<button data-del="${id}" aria-label="Borrar nota">×</button>` : ""}</li>`).join("")}</ul>` : `<p class="none">Aún no hay ideas en este anillo.</p>`}</div>`;
   }).join("");
 }
@@ -674,11 +675,11 @@ function renderPlen() {
       ${(() => { const tl = tally(id), top = CL.filter(k => tl[k.id]).sort((a, b) => tl[b.id] - tl[a.id]).slice(0, 3); return top.length ? `<div class="ct">Más votados: ${top.map(k => `${k.id} (${tl[k.id]})`).join(" · ")}</div>` : ""; })()}
       ${selOf(id).length ? `<div class="chips">${selOf(id).map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("")}</div>` : ""}
       ${(() => { const nw = cloudWords(nubeOf(id)).slice(0, 6); return nw.length ? `<div class="ct"><b>Así se imaginan Venezuela:</b> ${nw.map(w => esc(w.txt)).join(" · ")}</div>` : ""; })()}
-      ${g.frase ? `<p class="frase">«${esc(g.frase)}»</p>` : ""}
-      <div class="stats"><span class="tag accion">${cnt("a")} en a · país</span><span class="tag accion">${cnt("b")} en b · jóvenes</span><span class="tag accion">${cnt("c")} en c · acciones</span></div>
-      ${cnt("a") ? `<h5>a · País y Mérida</h5><ul>${top("a")}</ul>` : ""}
-      ${cnt("b") ? `<h5>b · Juventud</h5><ul>${top("b")}</ul>` : ""}
-      ${cnt("c") ? `<h5>c · Acciones</h5><ul>${top("c")}</ul>` : ""}
+
+      <div class="stats"><span class="tag" style="background:var(--na-soft);color:var(--na)">${cnt("a")} en a · país</span><span class="tag" style="background:var(--nb-soft);color:var(--nb)">${cnt("b")} en b · jóvenes</span><span class="tag" style="background:var(--nc-soft);color:var(--nc)">${cnt("c")} en c · acciones</span></div>
+      ${cnt("a") ? `<h5 style="color:var(--na)">a · País y Mérida</h5><ul>${top("a")}</ul>` : ""}
+      ${cnt("b") ? `<h5 style="color:var(--nb)">b · Juventud</h5><ul>${top("b")}</ul>` : ""}
+      ${cnt("c") ? `<h5 style="color:var(--nc)">c · Acciones</h5><ul>${top("c")}</ul>` : ""}
     </article>`;
   }).join("") || `<div class="empty">Todavía no hay grupos.</div>`;
 }
@@ -717,7 +718,7 @@ $("#gdel").onclick = e => {
 };
 const bindText = (sel, field, delay = 350) => $(sel).addEventListener("input", e => { if (!current) return; patchGroup(current, { [field]: e.target.value }, delay); if (field === "nombre") $("#gchips").querySelector(`[data-g="${current}"]`).textContent = e.target.value || "Grupo"; });
 bindText("#gname", "nombre"); bindText("#grel", "relator"); bindText("#porque", "porque"); bindText("#movidas", "movidas");
-bindText("#frase", "frase");
+
 $("#noteForm").onsubmit = e => {
   e.preventDefault(); if (!canNote || !current) return;
   const texto = $("#ntext").value.trim(); if (!texto) { $("#ntext").focus(); return; }
@@ -793,7 +794,7 @@ function md() {
       const it = ns.filter(n => n.anillo === r); if (!it.length) return;
       o += `### ${r} · ${l}\n\n` + it.map(n => `- ${n.tipo === "accion" ? `${n.texto} (${n.quien}, ${n.cuando})` : n.texto}`).join("\n") + "\n\n";
     });
-    if (g.frase) o += `**Frase del grupo:** «${g.frase}»\n\n`;
+
     const nw = cloudWords(nubeOf(id)); if (nw.length) o += `**Así me imagino Venezuela para 2050:** ${nw.map(w => w.c > 1 ? `${w.txt} (${w.c})` : w.txt).join(", ")}\n\n`;
   });
   if (senalIds().length) {
