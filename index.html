@@ -88,6 +88,8 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .guias{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
 .guias p{margin:0;background:var(--brand-soft);color:var(--ink);border-left:5px solid var(--brand);border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.4}
 .guias b{color:var(--brand)}
+.guias .pregunta{font-family:var(--display);font-weight:700;font-size:clamp(17px,2.2vw,22px);line-height:1.3;padding:18px 22px}
+.guias:has(.pregunta){grid-template-columns:minmax(0,1fr)}
 .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
 .ccard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px;align-content:start}
 .ccard.chosen{outline:3px solid var(--cc);outline-offset:-1px}
@@ -107,6 +109,15 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:720px){.two{grid-template-columns:1fr}}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+/* Roles */
+.ro .rel,.ro .vote button,.ro [data-choose],.ro [data-ssel],.ro #rreset,.ro #nform,.ro .timer .pill{display:none!important}
+.robanner{display:none;background:var(--brand-soft);border-left:5px solid var(--brand);border-radius:10px;padding:10px 14px;font-size:14px}
+.ro .robanner{display:block}
+.relbtn{margin-top:6px;margin-left:6px}
+.relbox{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--brand);border-radius:12px;padding:14px 16px}
+.relbox input{border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:var(--surface);min-width:0;flex:1 1 200px;max-width:280px;font-family:var(--display);letter-spacing:.06em;text-transform:uppercase}
+.relbox .msg{font-size:13px;color:var(--muted);flex-basis:100%}
+.relbox .msg.err{color:var(--risk)}
 /* En vivo */
 .livebadge{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:4px 10px;margin-top:6px}
 .livebadge i{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 0 rgba(74,222,128,.7);animation:pulseg 1.8s infinite}
@@ -235,7 +246,7 @@ footer{font-size:12px;color:var(--muted)}
   <div class="top">
     <div class="brandrow">
       <img src="data:image/png;base64,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" alt="Logo del PNUD" width="28" height="57">
-      <div><div class="eyebrow">Horizontes Venezuela 2050 · Miradas Jóvenes sobre el Futuro · Mérida</div><h1>Tablero de futuros</h1><span class="livebadge off" id="livebadge"><i></i><span id="livetxt">Conectando…</span></span></div>
+      <div><div class="eyebrow">Horizontes Venezuela 2050 · Miradas Jóvenes sobre el Futuro · Mérida</div><h1>Tablero de futuros</h1><span class="livebadge off" id="livebadge"><i></i><span id="livetxt">Conectando…</span></span><button class="pill relbtn" id="relbtn" hidden>Acceso relator/a</button></div>
     </div>
     <div class="timer" id="timer">
       <span class="t" id="tval">15:00</span>
@@ -248,6 +259,13 @@ footer{font-size:12px;color:var(--muted)}
   </div>
 
   <div id="status" class="status" hidden></div>
+  <form class="relbox" id="relbox" hidden>
+    <b style="font-family:var(--display)">Acceso para relatores</b>
+    <input id="relcode" type="password" autocomplete="off" placeholder="Código de acceso" aria-label="Código de acceso para relatores" maxlength="40">
+    <button class="pill primary" id="relgo">Entrar</button><button class="pill" type="button" id="relcancel">Cancelar</button>
+    <span class="msg" id="relmsg">Con el código, puedes crear grupos, votar, elegir el clúster, agregar señales y escribir la relatoría. El acceso queda guardado en este dispositivo.</span>
+  </form>
+  <div class="robanner" id="robanner">Estás en <b>modo vista</b>: todo se actualiza en vivo. Puedes sumar ideas en la rueda de <b>2 · Trascendencia</b>. Los relatores entran con su código en <b>Acceso relator/a</b>.</div>
 
   <div class="steps" role="tablist">
     <button role="tab" data-step="0" aria-selected="false">Universo de señales<small>132</small></button>
@@ -268,12 +286,7 @@ footer{font-size:12px;color:var(--muted)}
     <div class="groups"><span class="lbl">Tu grupo</span><span id="vgchips" style="display:contents"></span></div>
     <div id="vbody"></div>
     <p class="hint">Reparte tus puntos entre los clústeres que más te inspiran a explorar. Puedes poner más de un punto en el mismo. Los resultados se ven en vivo en la pantalla del grupo.</p>
-    <div class="guias">
-      <p>¿Qué clústeres muestran los <b>posibles cambios</b> en los que los jóvenes de Mérida podrían estar afectados o involucrados?</p>
-      <p>¿Qué clústeres nos sorprenden, son <b>nuevos o provocativos</b> y nos ofrecen una nueva perspectiva?</p>
-      <p>¿Qué clústeres nos inspiran a <b>nuevas posibilidades futuras</b>?</p>
-      <p>¿Qué clústeres parecen <b>llevarnos al pasado</b>, a temas que se vienen abordando desde hace tiempo?</p>
-    </div>
+    <div class="guias"><p class="pregunta">¿Cuál o cuáles ven que son los más importantes para el <b>rumbo del país en 2050</b>?</p></div>
     <button class="pill" id="vexit" style="justify-self:start">Ir al tablero completo</button>
   </section>
 
@@ -281,7 +294,7 @@ footer{font-size:12px;color:var(--muted)}
   <div class="groups" id="groups">
     <span class="lbl">Grupos</span>
     <span id="gchips" style="display:contents"></span>
-    <form class="newg" id="newg"><input id="newgname" placeholder="Nombre del grupo" aria-label="Nombre del nuevo grupo" maxlength="40"><button class="pill primary" id="newgbtn">+ Agregar grupo</button></form>
+    <form class="newg rel" id="newg"><input id="newgname" placeholder="Nombre del grupo" aria-label="Nombre del nuevo grupo" maxlength="40"><button class="pill primary" id="newgbtn">+ Agregar grupo</button></form>
   </div>
 
   <div id="noGroup" class="empty" hidden>Agrega el primer grupo para empezar. Cada grupo tiene su propia votación y su propia rueda.</div>
@@ -290,20 +303,15 @@ footer{font-size:12px;color:var(--muted)}
     <div class="meta" style="margin-bottom:12px">
       <div class="field" style="flex:1;min-width:180px"><label for="gname">Grupo</label><input id="gname" maxlength="40"></div>
       <div class="field" style="flex:1;min-width:180px"><label for="grel">Relator/a</label><input id="grel" maxlength="60" placeholder="Quién toma nota"></div>
-      <div class="field"><label>&nbsp;</label><button class="pill ghost" id="gdel">Eliminar grupo</button></div>
+      <div class="field rel"><label>&nbsp;</label><button class="pill ghost" id="gdel">Eliminar grupo</button></div>
     </div>
 
     <section id="s1" style="display:grid;gap:14px;margin-top:4px">
       <div class="bar">
-        <p class="hint">Los 13 clústeres son una propuesta. El grupo vota guiado por estas cuatro preguntas y el relator/a registra cada voto con + y −; las barras se actualizan en vivo en todas las pantallas.</p>
+        <p class="hint">Los 13 clústeres son una propuesta. El grupo vota guiado por esta pregunta y el relator/a registra cada voto con + y −; las barras se actualizan en vivo en todas las pantallas.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="pill" id="sortv" aria-pressed="false">Ordenar por votos</button></div>
       </div>
-      <div class="guias">
-        <p>¿Qué clústeres muestran los <b>posibles cambios</b> en los que los jóvenes de Mérida podrían estar afectados o involucrados?</p>
-        <p>¿Qué clústeres nos sorprenden, son <b>nuevos o provocativos</b> y nos ofrecen una nueva perspectiva?</p>
-        <p>¿Qué clústeres nos inspiran a <b>nuevas posibilidades futuras</b>?</p>
-        <p>¿Qué clústeres parecen <b>llevarnos al pasado</b>, a temas que se vienen abordando desde hace tiempo?</p>
-      </div>
+      <div class="guias"><p class="pregunta">¿Cuál o cuáles ven que son los más importantes para el <b>rumbo del país en 2050</b>?</p></div>
       <div class="res" id="res">
         <div class="hd"><h3><span class="live" aria-hidden="true"></span>Votación en vivo</h3><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="tot" id="rtot"></span><button class="pill" id="rproj">Proyectar</button><button class="pill" id="rreset">Reiniciar votos</button></div></div>
         <div class="body"><div class="bars" id="bars"></div></div>
@@ -389,25 +397,29 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "
 /* ---------- store: Supabase (shared, live) ---------- */
 const SB_URL = "https://uqcsnzljeiouzjrclecm.supabase.co";
 const SB_KEY = "sb_publishable_mKy3trJA5vDi3MUSOIP69g_Ea2A-u9C";
-let sb = null; const canWrite = true;
+let sb = null, sbW = null, canWrite = false, canNote = true, relCode = "";
 const state = { groups: {}, notes: {}, senales: {}, votos: {} };
 let current = null, step = "1", ring = "a", ntype = "oportunidad", sortByVotes = false;
 const queues = {};
 function enqueue(key, fn) { queues[key] = (queues[key] || Promise.resolve()).then(async () => { const r = await fn(); if (r && r.error) throw r.error; }).catch(handleErr); return queues[key]; }
-function handleErr(e) { console.error(e); showStatus("No se pudo guardar el último cambio. Revisa tu conexión e inténtalo de nuevo.", true); }
+function handleErr(e) {
+  console.error(e);
+  if (e && (e.code === "42501" || /row-level security/i.test(e.message || ""))) { showStatus(canWrite ? "Tu código de relator/a ya no es válido. Vuelve a entrar con el código actual." : "Ese cambio solo lo pueden hacer los relatores.", true); if (window.__reload) window.__reload(); }
+  else showStatus("No se pudo guardar el último cambio. Revisa tu conexión e inténtalo de nuevo.", true);
+}
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 async function addGroup(nombre) {
   const id = "g" + uid(); mineIds.add(id);
   const body = { nombre, relator: "", cluster: null, votos: {}, nuevas: [], porque: "", movidas: "", frase: "", citas: "", desacuerdos: "", creado: Date.now() };
   state.groups[id] = body; current = id; render();
-  enqueue("g" + id, () => sb.from("grupos").insert({ id, ...body }));
+  enqueue("g" + id, () => sbW.from("grupos").insert({ id, ...body }));
 }
 const pending = {}, timers = {};
 function patchGroup(id, patch, delay = 600) {
   Object.assign(state.groups[id], patch);
   pending[id] = Object.assign(pending[id] || {}, patch);
   clearTimeout(timers[id]);
-  timers[id] = setTimeout(() => { const p = pending[id]; delete pending[id]; enqueue("g" + id, () => sb.from("grupos").update(p).eq("id", id)); }, delay);
+  timers[id] = setTimeout(() => { const p = pending[id]; delete pending[id]; enqueue("g" + id, () => sbW.from("grupos").update(p).eq("id", id)); }, delay);
 }
 async function deleteGroup(id) {
   Object.keys(state.notes).forEach(k => { if (state.notes[k].grupo === id) delete state.notes[k]; });
@@ -415,17 +427,17 @@ async function deleteGroup(id) {
   Object.keys(state.votos).forEach(k => { if (state.votos[k].grupo === id) delete state.votos[k]; });
   delete state.groups[id];
   current = Object.keys(state.groups).sort((a, b) => state.groups[a].creado - state.groups[b].creado)[0] || null;
-  render(); enqueue("g" + id, () => sb.from("grupos").delete().eq("id", id));
+  render(); enqueue("g" + id, () => sbW.from("grupos").delete().eq("id", id));
 }
-function addNote(n) { const id = "n" + uid(); mineIds.add(id); state.notes[id] = n; renderRueda(); enqueue("n" + id, () => sb.from("notas").insert({ id, ...n })); }
-function deleteNote(id) { delete state.notes[id]; renderRueda(); enqueue("n" + id, () => sb.from("notas").delete().eq("id", id)); }
-function addVoto(v) { const id = "v" + uid(); mineIds.add(id); state.votos[id] = v; onVotes(); enqueue("v" + id, () => sb.from("votos").insert({ id, ...v })); }
-function delVoto(id) { delete state.votos[id]; onVotes(); enqueue("v" + id, () => sb.from("votos").delete().eq("id", id)); }
-function addSenal(s) { const id = "s" + uid(); mineIds.add(id); state.senales[id] = s; renderClas(); enqueue("s" + id, () => sb.from("senales").insert({ id, ...s })); }
+function addNote(n) { const id = "n" + uid(); mineIds.add(id); state.notes[id] = n; renderRueda(); enqueue("n" + id, () => sbW.from("notas").insert({ id, ...n })); }
+function deleteNote(id) { delete state.notes[id]; renderRueda(); enqueue("n" + id, () => sbW.from("notas").delete().eq("id", id)); }
+function addVoto(v) { const id = "v" + uid(); mineIds.add(id); state.votos[id] = v; onVotes(); enqueue("v" + id, () => sbW.from("votos").insert({ id, ...v })); }
+function delVoto(id) { delete state.votos[id]; onVotes(); enqueue("v" + id, () => sbW.from("votos").delete().eq("id", id)); }
+function addSenal(s) { const id = "s" + uid(); mineIds.add(id); state.senales[id] = s; renderClas(); enqueue("s" + id, () => sbW.from("senales").insert({ id, ...s })); }
 function deleteSenal(id) {
   delete state.senales[id];
   Object.keys(state.groups).forEach(gid => { const a = state.groups[gid].nuevas || []; if (a.includes(id)) patchGroup(gid, { nuevas: a.filter(x => x !== id) }, 0); });
-  renderClas(); enqueue("s" + id, () => sb.from("senales").delete().eq("id", id));
+  renderClas(); enqueue("s" + id, () => sbW.from("senales").delete().eq("id", id));
 }
 function showStatus(msg, warn) { const s = $("#status"); s.textContent = msg; s.classList.toggle("warn", !!warn); s.hidden = !msg; }
 
@@ -436,6 +448,7 @@ const senalIds = () => Object.keys(state.senales).sort((a, b) => (state.senales[
 const ncode = id => "N" + (senalIds().indexOf(id) + 1);
 const newOf = cid => senalIds().filter(k => (state.senales[k].cluster || null) === cid);
 const selOf = gid => ((state.groups[gid] || {}).nuevas || []).filter(k => state.senales[k]);
+function applyRole() { document.body.classList.toggle("ro", !canWrite); render(); }
 const PUNTOS = 3;
 let ME = ""; try { ME = localStorage.getItem("tablero-merida-yo") || ""; if (!ME) { ME = "p" + uid(); localStorage.setItem("tablero-merida-yo", ME); } } catch (e) { ME = "p" + uid(); }
 const votosOf = gid => Object.entries(state.votos).filter(([, v]) => v.grupo === gid);
@@ -489,12 +502,13 @@ function markFresh(id) { if (!mineIds.has(id)) fresh[id] = Date.now(); }
 function diffFresh(prev, next) { if (!booted) return; Object.keys(next).forEach(k => { if (!prev[k]) markFresh(k); }); }
 const isFresh = id => fresh[id] && Date.now() - fresh[id] < 2600;
 const fl = id => isFresh(id) ? " flash" : "";
-let booted = false;
+let booted = false, sameG = false, lastRG = null;
 function pulse(el) { if (!el) return; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
-function setVal(el, v) { if (document.activeElement !== el && el.value !== (v || "")) { const had = el.value !== "" || (v || "") !== ""; el.value = v || ""; if (booted && had) pulse(el); } }
+function setVal(el, v) { if (document.activeElement !== el && el.value !== (v || "")) { const had = el.value !== "" || (v || "") !== ""; el.value = v || ""; if (booted && had && sameG) pulse(el); } }
 
 function render() {
-  applyWant(); if (typeof tShow === "function") tShow();
+  document.body.classList.toggle("ro", !canWrite);
+  applyWant(); sameG = lastRG === current; lastRG = current; if (typeof tShow === "function") tShow();
   if (mode === "votar") { renderVote(); return; }
   const ids = groupIds();
   if (current && !state.groups[current]) current = null;
@@ -505,7 +519,9 @@ function render() {
   $("#s0").hidden = step !== "0"; $("#groupArea").hidden = step === "0";
   if (step === "0") { renderUni(); return; }
   $("#noGroup").hidden = !!ids.length; $("#work").hidden = !ids.length;
-  document.querySelectorAll("#groupArea input,#groupArea textarea,#groupArea select,#newgbtn,#gdel,#nadd").forEach(el => { el.disabled = !canWrite; });
+  document.querySelectorAll("#groupArea input,#groupArea textarea,#groupArea select,#newgbtn,#gdel").forEach(el => { el.disabled = !canWrite; });
+  ["#ntext", "#nadd", "#quien", "#cuando"].forEach(s => { $(s).disabled = !canNote; });
+  $("#noGroup").textContent = canWrite ? "Agrega el primer grupo para empezar. Cada grupo tiene su propia votación y su propia rueda." : "Todavía no hay grupos. Aparecerán aquí en cuanto los relatores los creen.";
   if (!current) return;
   const g = state.groups[current];
   setVal($("#gname"), g.nombre); setVal($("#grel"), g.relator);
@@ -657,7 +673,7 @@ const bindText = (sel, field, delay = 350) => $(sel).addEventListener("input", e
 bindText("#gname", "nombre"); bindText("#grel", "relator"); bindText("#porque", "porque"); bindText("#movidas", "movidas");
 bindText("#frase", "frase"); bindText("#citas", "citas"); bindText("#desac", "desacuerdos");
 $("#noteForm").onsubmit = e => {
-  e.preventDefault(); if (!canWrite || !current) return;
+  e.preventDefault(); if (!canNote || !current) return;
   const texto = $("#ntext").value.trim(); if (!texto) { $("#ntext").focus(); return; }
   const n = { grupo: current, anillo: ring, tipo: ring === "c" ? "accion" : ntype, texto: texto.slice(0, 500), t: Date.now() };
   if (ring === "c") { n.quien = $("#quien").value; n.cuando = $("#cuando").value; }
@@ -739,6 +755,27 @@ render();
 (async () => {
   if (!window.supabase) { showStatus("No se pudo conectar con la base de datos. Recarga la página.", true); return; }
   sb = window.supabase.createClient(SB_URL, SB_KEY, { realtime: { params: { eventsPerSecond: 20 } } });
+  sbW = sb;
+  const makeW = code => window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: false, autoRefreshToken: false, storageKey: "rel-" + code.length }, global: { headers: { "x-relator": code } } });
+  const RK = "tablero-merida-relator";
+  function setRel(code, client) {
+    relCode = code; canWrite = !!code; sbW = code ? client : sb;
+    $("#relbtn").textContent = code ? "Relator/a ✓ · Salir" : "Acceso relator/a"; $("#relbtn").classList.toggle("on", !!code);
+    try { code ? localStorage.setItem(RK, code) : localStorage.removeItem(RK); } catch (e) {}
+    render();
+  }
+  async function tryCode(code, quiet) {
+    const c = makeW(code); const { data, error } = await c.rpc("es_relator");
+    if (error) { if (!quiet) { $("#relmsg").textContent = "No se pudo verificar el código. Revisa tu conexión e inténtalo de nuevo."; $("#relmsg").classList.add("err"); } return false; }
+    if (data === true) { setRel(code, c); return true; }
+    if (!quiet) { $("#relmsg").textContent = "Código incorrecto. Pídelo a la coordinación del taller."; $("#relmsg").classList.add("err"); }
+    return false;
+  }
+  $("#relbtn").hidden = false;
+  $("#relbtn").onclick = () => { if (relCode) { setRel("", null); showStatus(""); return; } $("#relbox").hidden = !$("#relbox").hidden; if (!$("#relbox").hidden) $("#relcode").focus(); };
+  $("#relcancel").onclick = () => { $("#relbox").hidden = true; };
+  $("#relbox").onsubmit = async e => { e.preventDefault(); const code = $("#relcode").value.trim().toUpperCase(); if (!code) return; $("#relgo").disabled = true; const ok = await tryCode(code, false); $("#relgo").disabled = false; if (ok) { $("#relbox").hidden = true; $("#relcode").value = ""; showStatus("Entraste como relator/a. Ya puedes editar el tablero."); setTimeout(() => showStatus(""), 4000); } };
+  try { const saved = localStorage.getItem(RK); if (saved) tryCode(saved, true).then(ok => { if (!ok) try { localStorage.removeItem(RK); } catch (e) {} }); } catch (e) {}
   const strip = r => { const o = Object.assign({}, r); delete o.id; return o; };
   const repaint = () => { if (mode !== "votar" && step === "0") renderUni(); else render(); };
   async function loadAll() {
@@ -751,6 +788,7 @@ render();
     if (booted) { diffFresh(state.groups, ng); diffFresh(state.notes, nn); diffFresh(state.senales, ns); }
     state.groups = ng; state.notes = nn; state.senales = ns; state.votos = nv; showStatus(""); repaint(); booted = true;
   }
+  window.__reload = loadAll;
   await loadAll();
   const live = (on, txt) => { $("#livebadge").classList.toggle("off", !on); $("#livetxt").textContent = txt; };
   let peers = 0;
