@@ -670,6 +670,9 @@ $("#treset").onclick = () => tSet(tTotal / 60);
 $("#tgo").onclick = () => { if (tRun) { clearInterval(tRun); tRun = null; } else if (tLeft > 0) { tRun = setInterval(() => { tLeft = Math.max(0, tLeft - 1); if (!tLeft) { clearInterval(tRun); tRun = null; } tShow(); }, 1000); } tShow(); };
 tShow();
 
+/* ---------- url ---------- */
+try { const sp = new URLSearchParams(location.search); if (sp.get("g")) wantG = sp.get("g"); if (sp.has("votar")) { mode = "votar"; $(".steps").hidden = true; $("#groupArea").hidden = true; $("#vmode").hidden = false; } } catch (e) {}
+
 /* ---------- exports ---------- */
 function csv() {
   const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
