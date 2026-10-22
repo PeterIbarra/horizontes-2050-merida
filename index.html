@@ -103,6 +103,22 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:720px){.two{grid-template-columns:1fr}}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+/* Nube (estilo Menti) */
+.nubep{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--brand);border-radius:12px;padding:16px;display:grid;gap:12px}
+.nubep .hd{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.nubep h3{margin:0;font-family:var(--display);font-size:18px;color:var(--brand)}
+.nubep .sub{font-size:13px;color:var(--muted)}
+.cloud{min-height:220px;display:flex;flex-wrap:wrap;justify-content:center;align-content:center;align-items:center;gap:6px 18px;padding:18px 8px;background:linear-gradient(180deg,var(--sunk),var(--surface));border-radius:12px;text-align:center}
+.cloud .w{font-family:var(--display);font-weight:800;line-height:1.05;letter-spacing:-.01em;transition:font-size .5s ease;cursor:default;overflow-wrap:anywhere;max-width:100%}
+.cloud .w.pop{animation:pop .9s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.15);opacity:1}100%{transform:scale(1)}}
+.cloud .none{font-size:14px;color:var(--muted);font-style:italic}
+.ed .cloud .w{cursor:pointer}
+.cform{display:flex;gap:8px;flex-wrap:wrap}
+.cform input{flex:1 1 220px;min-width:0;border:1px solid var(--line);border-radius:999px;padding:10px 16px;background:var(--surface);font-size:16px}
+.nubep:fullscreen{padding:40px 56px;background:var(--surface);overflow:auto;align-content:start}
+.nubep:fullscreen h3{font-size:40px}.nubep:fullscreen .sub{font-size:20px}
+.nubep:fullscreen .cloud{min-height:70vh}
 /* Roles */
 .ro .rel,.ro .vote button,.ro [data-choose],.ro [data-ssel],.ro #rreset,.ro #nform,.ro .timer .pill{display:none!important}
 .robanner{display:none;background:var(--brand-soft);border-left:5px solid var(--brand);border-radius:10px;padding:10px 14px;font-size:14px}
@@ -259,7 +275,7 @@ footer{font-size:12px;color:var(--muted)}
     <button class="pill primary" id="relgo">Entrar</button><button class="pill" type="button" id="relcancel">Cancelar</button>
     <span class="msg" id="relmsg">Con el código, puedes crear grupos, votar, elegir el clúster, agregar señales y escribir la relatoría. El acceso queda guardado en este dispositivo.</span>
   </form>
-  <div class="robanner" id="robanner">Estás en <b>modo vista</b>: todo se actualiza en vivo. Puedes sumar ideas en la rueda de <b>2 · Trascendencia</b>. Los relatores entran con su código en <b>Acceso relator/a</b>.</div>
+  <div class="robanner" id="robanner">Estás en <b>modo vista</b>: todo se actualiza en vivo. En <b>2 · Trascendencia</b> puedes sumar ideas a la rueda y escribir cómo te imaginas Venezuela para 2050. Los relatores entran con su código en <b>Acceso relator/a</b>.</div>
 
   <div class="steps" role="tablist">
     <button role="tab" data-step="0" aria-selected="false">Universo de señales<small>132</small></button>
@@ -356,10 +372,11 @@ footer{font-size:12px;color:var(--muted)}
       <div class="panel">
         <h3>Síntesis del grupo para la plenaria</h3>
         <div class="field"><label for="frase">Nuestra frase sobre Mérida en 2050</label><input id="frase" maxlength="240"></div>
-        <div class="two">
-          <div class="field"><label for="citas">Citas textuales destacadas</label><textarea id="citas"></textarea></div>
-          <div class="field"><label for="desac">Desacuerdos o preguntas abiertas</label><textarea id="desac"></textarea></div>
-        </div>
+      </div>
+      <div class="nubep" id="nubeG">
+        <div class="hd"><div><h3>Así me imagino Venezuela para 2050</h3><div class="sub" id="nsubG">Escribe una palabra o frase corta. Las que más se repiten se ven más grandes.</div></div><button class="pill" data-proj="nubeG">Proyectar</button></div>
+        <form class="cform" id="cform"><input id="ctext" maxlength="40" placeholder="Una palabra o frase corta" aria-label="Así me imagino Venezuela para 2050" autocomplete="off"><button class="pill primary" id="cadd">Enviar</button></form>
+        <div class="cloud" id="cloudG" aria-live="polite"></div>
       </div>
     </section>
 
@@ -367,6 +384,10 @@ footer{font-size:12px;color:var(--muted)}
       <div class="bar">
         <p class="hint">Resumen de todos los grupos para la plenaria.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="pill" id="expCsv">Descargar notas (CSV)</button><button class="pill" id="expMd">Descargar relatoría (Markdown)</button></div>
+      </div>
+      <div class="nubep" id="nubeA">
+        <div class="hd"><div><h3>Así me imagino Venezuela para 2050</h3><div class="sub" id="nsubA">Todos los grupos</div></div><button class="pill" data-proj="nubeA">Proyectar</button></div>
+        <div class="cloud" id="cloudA" aria-live="polite"></div>
       </div>
       <div class="pgrid" id="pgrid"></div>
     </section>
@@ -391,7 +412,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "
 const SB_URL = "https://uqcsnzljeiouzjrclecm.supabase.co";
 const SB_KEY = "sb_publishable_mKy3trJA5vDi3MUSOIP69g_Ea2A-u9C";
 let sb = null, sbW = null, canWrite = false, canNote = true, relCode = "";
-const state = { groups: {}, notes: {}, senales: {}, votos: {} };
+const state = { groups: {}, notes: {}, senales: {}, votos: {}, nube: {} };
 let current = null, step = "1", ring = "a", ntype = "oportunidad", sortByVotes = false;
 const queues = {};
 function enqueue(key, fn) { queues[key] = (queues[key] || Promise.resolve()).then(async () => { const r = await fn(); if (r && r.error) throw r.error; }).catch(handleErr); return queues[key]; }
@@ -418,12 +439,15 @@ async function deleteGroup(id) {
   Object.keys(state.notes).forEach(k => { if (state.notes[k].grupo === id) delete state.notes[k]; });
   Object.keys(state.senales).forEach(k => { if (state.senales[k].grupo === id) delete state.senales[k]; });
   Object.keys(state.votos).forEach(k => { if (state.votos[k].grupo === id) delete state.votos[k]; });
+  Object.keys(state.nube).forEach(k => { if (state.nube[k].grupo === id) delete state.nube[k]; });
   delete state.groups[id];
   current = Object.keys(state.groups).sort((a, b) => state.groups[a].creado - state.groups[b].creado)[0] || null;
   render(); enqueue("g" + id, () => sbW.from("grupos").delete().eq("id", id));
 }
 function addNote(n) { const id = "n" + uid(); mineIds.add(id); state.notes[id] = n; renderRueda(); enqueue("n" + id, () => sbW.from("notas").insert({ id, ...n })); }
 function deleteNote(id) { delete state.notes[id]; renderRueda(); enqueue("n" + id, () => sbW.from("notas").delete().eq("id", id)); }
+function addNube(n) { const id = "w" + uid(); mineIds.add(id); state.nube[id] = n; renderClouds(); enqueue("w" + id, () => sbW.from("nube").insert({ id, ...n })); }
+function delNube(id) { delete state.nube[id]; renderClouds(); enqueue("w" + id, () => sbW.from("nube").delete().eq("id", id)); }
 function addVoto(v) { const id = "v" + uid(); mineIds.add(id); state.votos[id] = v; onVotes(); enqueue("v" + id, () => sbW.from("votos").insert({ id, ...v })); }
 function delVoto(id) { delete state.votos[id]; onVotes(); enqueue("v" + id, () => sbW.from("votos").delete().eq("id", id)); }
 function addSenal(s) { const id = "s" + uid(); mineIds.add(id); state.senales[id] = s; renderClas(); enqueue("s" + id, () => sbW.from("senales").insert({ id, ...s })); }
@@ -442,6 +466,35 @@ const ncode = id => "N" + (senalIds().indexOf(id) + 1);
 const newOf = cid => senalIds().filter(k => (state.senales[k].cluster || null) === cid);
 const selOf = gid => ((state.groups[gid] || {}).nuevas || []).filter(k => state.senales[k]);
 function applyRole() { document.body.classList.toggle("ro", !canWrite); render(); }
+const nubeOf = gid => Object.entries(state.nube).filter(([, n]) => !gid || n.grupo === gid);
+const ckey = s => String(s || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\p{L}\p{N}\s]/gu, "").replace(/\s+/g, " ").trim();
+function cloudWords(entries) {
+  const m = {};
+  entries.forEach(([id, n]) => { const k = ckey(n.texto); if (!k) return; const o = m[k] || (m[k] = { k, c: 0, ids: [], forms: {}, t: n.t }); o.c++; o.ids.push(id); const f = n.texto.trim().toLowerCase(); o.forms[f] = (o.forms[f] || 0) + 1; o.t = Math.min(o.t, n.t); });
+  return Object.values(m).map(o => ({ ...o, txt: Object.entries(o.forms).sort((a, b) => b[1] - a[1])[0][0] })).sort((a, b) => b.c - a.c || a.t - b.t);
+}
+const CPAL = ["#0468b1", "#1f8dd6", "#0a3d6b", "#00689d", "#3d8fd1", "#19486a", "#0a97d9", "#26658f"];
+const prevC = {};
+function drawCloud(el, entries, scope, big) {
+  const ws = cloudWords(entries), was = prevC[scope] || {}, now = {};
+  if (!ws.length) { el.innerHTML = `<span class="none">${scope === "A" ? "Todavía no hay palabras de ningún grupo." : "Todavía no hay palabras. ¡Escribe la primera!"}</span>`; prevC[scope] = now; return; }
+  const max = ws[0].c, lo = big ? 26 : 16, hi = big ? 120 : 60;
+  const order = []; ws.forEach((w, i) => { i % 2 ? order.push(w) : order.unshift(w); });
+  el.innerHTML = order.map(w => {
+    now[w.k] = w.c; let f = max > 1 ? lo + (hi - lo) * Math.sqrt((w.c - 1) / (max - 1)) : (lo + hi) / 2.4;
+    const W = el.clientWidth || 600, longest = Math.max(...w.txt.split(" ").map(s => s.length), 1); f = Math.max(14, Math.min(f, (W - 24) / (0.64 * longest)));
+    const col = CPAL[[...w.k].reduce((a, ch) => a + ch.charCodeAt(0), 0) % CPAL.length];
+    return `<span class="w${was[w.k] !== w.c && booted ? " pop" : ""}" data-ck="${esc(w.k)}" style="font-size:${f.toFixed(1)}px;color:${col}" title="${w.c} vez${w.c === 1 ? "" : "es"}${canWrite ? " · doble clic para quitar" : ""}">${esc(w.txt)}</span>`;
+  }).join("");
+  prevC[scope] = now;
+}
+function renderClouds() {
+  const fsEl = document.fullscreenElement;
+  if (current && state.groups[current]) { drawCloud($("#cloudG"), nubeOf(current), "G" + current, fsEl === $("#nubeG")); const n = nubeOf(current).length; $("#nsubG").textContent = n ? `${n} respuesta${n === 1 ? "" : "s"} de ${state.groups[current].nombre || "este grupo"} · las que más se repiten se ven más grandes` : "Escribe una palabra o frase corta. Las que más se repiten se ven más grandes."; }
+  drawCloud($("#cloudA"), nubeOf(null), "A", fsEl === $("#nubeA")); const na = nubeOf(null).length; $("#nsubA").textContent = `Todos los grupos · ${na} respuesta${na === 1 ? "" : "s"}`;
+  document.querySelectorAll(".nubep").forEach(p => p.classList.toggle("ed", canWrite));
+  $("#ctext").disabled = $("#cadd").disabled = !canNote || !current;
+}
 const PUNTOS = 3;
 let ME = ""; try { ME = localStorage.getItem("tablero-merida-yo") || ""; if (!ME) { ME = "p" + uid(); localStorage.setItem("tablero-merida-yo", ME); } } catch (e) { ME = "p" + uid(); }
 const votosOf = gid => Object.entries(state.votos).filter(([, v]) => v.grupo === gid);
@@ -519,9 +572,10 @@ function render() {
   const g = state.groups[current];
   setVal($("#gname"), g.nombre); setVal($("#grel"), g.relator);
   setVal($("#porque"), g.porque); setVal($("#movidas"), g.movidas);
-  setVal($("#frase"), g.frase); setVal($("#citas"), g.citas); setVal($("#desac"), g.desacuerdos);
+  setVal($("#frase"), g.frase);
   ["1", "2", "3"].forEach(s => $("#s" + s).hidden = s !== step);
   if (step === "1") renderClas(); if (step === "2") renderRueda(); if (step === "3") renderPlen();
+  if (step === "2" || step === "3") renderClouds();
 }
 let uq = "", usc = "";
 function renderUni() {
@@ -619,6 +673,7 @@ function renderPlen() {
       <div class="cl"><i></i>${c ? `${c.id} · ${esc(c.n)}` : "Sin clúster elegido"}</div>
       ${(() => { const tl = tally(id), top = CL.filter(k => tl[k.id]).sort((a, b) => tl[b.id] - tl[a.id]).slice(0, 3); return top.length ? `<div class="ct">Más votados: ${top.map(k => `${k.id} (${tl[k.id]})`).join(" · ")}</div>` : ""; })()}
       ${selOf(id).length ? `<div class="chips">${selOf(id).map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("")}</div>` : ""}
+      ${(() => { const nw = cloudWords(nubeOf(id)).slice(0, 6); return nw.length ? `<div class="ct"><b>Así se imaginan Venezuela:</b> ${nw.map(w => esc(w.txt)).join(" · ")}</div>` : ""; })()}
       ${g.frase ? `<p class="frase">«${esc(g.frase)}»</p>` : ""}
       <div class="stats"><span class="tag accion">${cnt("a")} en a · país</span><span class="tag accion">${cnt("b")} en b · jóvenes</span><span class="tag accion">${cnt("c")} en c · acciones</span></div>
       ${cnt("a") ? `<h5>a · País y Mérida</h5><ul>${top("a")}</ul>` : ""}
@@ -646,7 +701,7 @@ document.addEventListener("click", e => {
 });
 $("#vexit").onclick = () => { step = "1"; setMode("tablero"); };
 $("#rproj").onclick = async () => { const r = $("#res"); try { if (document.fullscreenElement) await document.exitFullscreen(); else await r.requestFullscreen(); } catch (e) { showStatus("Esta vista no permite pantalla completa; usa el zoom del navegador para proyectar.", true); } };
-document.addEventListener("fullscreenchange", () => { $("#rproj").textContent = document.fullscreenElement ? "Salir de proyección" : "Proyectar"; renderResults(); });
+document.addEventListener("fullscreenchange", () => { $("#rproj").textContent = document.fullscreenElement === $("#res") ? "Salir de proyección" : "Proyectar"; renderResults(); });
 let resetArmed = false;
 $("#rreset").onclick = e => {
   if (!resetArmed) { resetArmed = true; e.currentTarget.textContent = "¿Seguro? Toca de nuevo"; e.currentTarget.classList.add("danger"); setTimeout(() => { resetArmed = false; $("#rreset").textContent = "Reiniciar votos"; $("#rreset").classList.remove("danger"); }, 4000); return; }
@@ -662,7 +717,7 @@ $("#gdel").onclick = e => {
 };
 const bindText = (sel, field, delay = 350) => $(sel).addEventListener("input", e => { if (!current) return; patchGroup(current, { [field]: e.target.value }, delay); if (field === "nombre") $("#gchips").querySelector(`[data-g="${current}"]`).textContent = e.target.value || "Grupo"; });
 bindText("#gname", "nombre"); bindText("#grel", "relator"); bindText("#porque", "porque"); bindText("#movidas", "movidas");
-bindText("#frase", "frase"); bindText("#citas", "citas"); bindText("#desac", "desacuerdos");
+bindText("#frase", "frase");
 $("#noteForm").onsubmit = e => {
   e.preventDefault(); if (!canNote || !current) return;
   const texto = $("#ntext").value.trim(); if (!texto) { $("#ntext").focus(); return; }
@@ -676,6 +731,22 @@ $("#nform").onsubmit = e => {
   addSenal({ grupo: current, cluster: $("#ncl").value || null, nombre: nombre.slice(0, 140), descripcion: $("#ndesc").value.trim().slice(0, 600), escala: $("#nesc").value, t: Date.now() });
   $("#nnom").value = ""; $("#ndesc").value = ""; $("#nnom").focus();
 };
+$("#cform").onsubmit = e => {
+  e.preventDefault(); if (!canNote || !current) return;
+  const v = $("#ctext").value.trim().replace(/\s+/g, " ").slice(0, 40); if (!ckey(v)) { $("#ctext").focus(); return; }
+  addNube({ grupo: current, texto: v, t: Date.now() }); $("#ctext").value = ""; $("#ctext").focus();
+};
+document.addEventListener("dblclick", e => {
+  const w = e.target.closest(".cloud .w"); if (!w || !canWrite) return;
+  const scopeG = w.closest("#cloudG") ? current : null, k = w.dataset.ck;
+  nubeOf(scopeG).filter(([, n]) => ckey(n.texto) === k).forEach(([id]) => delNube(id));
+});
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-proj]"); if (!b) return;
+  const el = document.getElementById(b.dataset.proj);
+  try { if (document.fullscreenElement) await document.exitFullscreen(); else await el.requestFullscreen(); } catch (err) { showStatus("Esta vista no permite pantalla completa; usa el zoom del navegador para proyectar.", true); }
+});
+document.addEventListener("fullscreenchange", () => { document.querySelectorAll("[data-proj]").forEach(b => b.textContent = document.fullscreenElement && document.fullscreenElement.id === b.dataset.proj ? "Salir de proyección" : "Proyectar"); renderClouds(); });
 $("#ntext").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#noteForm").requestSubmit(); } });
 window.addEventListener("resize", () => { if (step === "2") renderRueda(); });
 
@@ -723,8 +794,7 @@ function md() {
       o += `### ${r} · ${l}\n\n` + it.map(n => `- ${n.tipo === "accion" ? `${n.texto} (${n.quien}, ${n.cuando})` : n.texto}`).join("\n") + "\n\n";
     });
     if (g.frase) o += `**Frase del grupo:** «${g.frase}»\n\n`;
-    if (g.citas) o += `**Citas:** ${g.citas}\n\n`;
-    if (g.desacuerdos) o += `**Desacuerdos o preguntas:** ${g.desacuerdos}\n\n`;
+    const nw = cloudWords(nubeOf(id)); if (nw.length) o += `**Así me imagino Venezuela para 2050:** ${nw.map(w => w.c > 1 ? `${w.txt} (${w.c})` : w.txt).join(", ")}\n\n`;
   });
   if (senalIds().length) {
     o += "## Señales nuevas propuestas por los grupos\n\n";
@@ -770,12 +840,13 @@ render();
   const strip = r => { const o = Object.assign({}, r); delete o.id; return o; };
   const repaint = () => { if (mode !== "votar" && step === "0") renderUni(); else render(); };
   async function loadAll() {
-    const [g, n, s, vt] = await Promise.all([sb.from("grupos").select("*"), sb.from("notas").select("*"), sb.from("senales").select("*"), sb.from("votos").select("*")]);
-    if (g.error || n.error || s.error || vt.error) { showStatus("No se pudieron cargar los datos. Revisa tu conexión.", true); return; }
+    const [g, n, s, vt, nb] = await Promise.all([sb.from("grupos").select("*"), sb.from("notas").select("*"), sb.from("senales").select("*"), sb.from("votos").select("*"), sb.from("nube").select("*")]);
+    if (g.error || n.error || s.error || vt.error || nb.error) { showStatus("No se pudieron cargar los datos. Revisa tu conexión.", true); return; }
     const ng = {}; g.data.forEach(r => { ng[r.id] = Object.assign(strip(r), pending[r.id] || {}); });
     const nn = {}; n.data.forEach(r => { nn[r.id] = strip(r); });
     const ns = {}; s.data.forEach(r => { ns[r.id] = strip(r); });
     const nv = {}; vt.data.forEach(r => { nv[r.id] = strip(r); });
+    const nn2 = {}; nb.data.forEach(r => { nn2[r.id] = strip(r); }); state.nube = nn2;
     if (booted) { diffFresh(state.groups, ng); diffFresh(state.notes, nn); diffFresh(state.senales, ns); }
     state.groups = ng; state.notes = nn; state.senales = ns; state.votos = nv; showStatus(""); repaint(); booted = true;
   }
@@ -801,6 +872,10 @@ render();
       if (p.eventType === "INSERT") markFresh(p.new.id);
       if (p.eventType === "DELETE") delete state.notes[p.old.id]; else state.notes[p.new.id] = strip(p.new);
       if (step === "2") renderRueda(); if (step === "3") renderPlen();
+    })
+    .on("postgres_changes", { event: "*", schema: "public", table: "nube" }, p => {
+      if (p.eventType === "DELETE") delete state.nube[p.old.id]; else state.nube[p.new.id] = strip(p.new);
+      if (mode !== "votar" && (step === "2" || step === "3")) renderClouds(); if (step === "3") renderPlen();
     })
     .on("postgres_changes", { event: "*", schema: "public", table: "votos" }, p => {
       if (p.eventType === "DELETE") delete state.votos[p.old.id]; else state.votos[p.new.id] = strip(p.new);
