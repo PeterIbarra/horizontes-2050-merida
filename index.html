@@ -226,6 +226,36 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .wlabel{position:absolute;transform:translate(-50%,-50%);font-family:var(--display);font-weight:800;font-size:20px;color:#0a3d6b;pointer-events:none}
 .sticky{position:absolute;transform:translate(-50%,-50%);width:104px;background:var(--tc);color:#fff;font-weight:700;border:2px solid #fff;border-radius:6px;padding:4px 6px;font-size:11px;line-height:1.25;box-shadow:0 2px 6px rgba(0,0,0,.28);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .cw{width:100%}
+.res{display:grid;gap:18px}
+.rfi{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.rfi b{color:var(--ink)}
+.rhd{display:grid;grid-template-columns:auto minmax(0,1fr);gap:20px;align-items:center;background:var(--band);color:#fff;border-radius:16px;padding:22px 24px}
+.rhd .r2{font-family:var(--display);font-weight:900;font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.03em}
+.rhd .rk{margin:0 0 4px;font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.rhd h2{margin:0;font-family:var(--display);font-size:clamp(18px,2.2vw,24px);line-height:1.3}
+.rhd h2 em{font-style:normal;background:#fff;color:var(--band);border-radius:4px;padding:0 5px}
+.rhd p{margin:8px 0 0;font-size:15px;opacity:.92}
+@media (max-width:640px){.rhd{grid-template-columns:1fr;gap:8px}}
+.rgr{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:12px}
+.rcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:6px;align-content:start}
+.rcard .ri{width:44px;height:44px;border-radius:12px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center}
+.rcard h3{margin:0;font-family:var(--display);font-size:16px}
+.rcard p{margin:0;font-size:14px;color:var(--muted);line-height:1.5}
+.rtw{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:12px}
+.rbox{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;align-content:start}
+.rbox h3{margin:0;font-family:var(--display);font-size:16px}
+.rpod{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.rpod li{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;background:var(--bg);border-radius:10px;padding:8px 12px;border-left:6px solid var(--cc)}
+.rpod li:first-child{background:var(--band);color:#fff}
+.rpod .pn{font-family:var(--display);font-weight:900;font-size:24px;color:var(--brand);line-height:1}
+.rpod li:first-child .pn{color:#cfe4f7}
+.rpod b{font-family:var(--display);font-size:14.5px}
+.rpod .pc{font-family:var(--display);font-size:12px;font-weight:800;opacity:.7}
+.rcen{display:grid;gap:10px}
+.rc1{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.rc1 .gn{font-family:var(--display);font-weight:800;font-size:14px;min-width:70px}
+.rc1 .cc{font-size:13px;font-weight:700;background:var(--bg);border-left:5px solid var(--cc);border-radius:8px;padding:5px 10px}
+.rgo{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px;color:var(--muted)}
 .pq{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:16px 18px;display:grid;gap:10px}
 .pq h3{font-family:var(--display);font-size:17px;margin:0;color:var(--brand)}
 .pq .pi{margin:0;font-size:15px;font-weight:600;line-height:1.5}
@@ -348,13 +378,16 @@ footer{font-size:12px;color:var(--muted)}
   <div class="robanner" id="robanner">Estás en <b>modo vista</b>: todo se actualiza en vivo. En <b>2 · Trascendencia</b> puedes sumar ideas a la rueda. Los relatores entran con su código en <b>Acceso relator/a</b>.</div>
 
   <div class="steps" role="tablist">
-    <button role="tab" data-step="0" aria-selected="true">Universo de señales<small>132</small></button>
+    <button role="tab" data-step="R" aria-selected="true">Resumen<small>en pocas palabras</small></button>
+    <button role="tab" data-step="0" aria-selected="false">Universo de señales<small>132</small></button>
     <button role="tab" data-step="1" aria-selected="false">1 · Clasificación<small>15 min</small></button>
     <button role="tab" data-step="2" aria-selected="false">2 · Trascendencia<small>25 min</small></button>
     <button role="tab" data-step="3" aria-selected="false">3 · Plenaria<small>todos los grupos</small></button>
   </div>
 
-  <section id="s0" style="display:grid;gap:14px">
+  <section id="sR" class="res"></section>
+
+  <section id="s0" style="display:grid;gap:14px" hidden>
     <div class="bar">
       <input id="q" type="search" placeholder="Buscar una señal…" aria-label="Buscar una señal" style="flex:1;min-width:200px;max-width:420px;border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:var(--surface)">
       <button class="pill" id="uopen" aria-pressed="false">Ver todo con implicaciones a 2050</button>
@@ -476,7 +509,7 @@ const SB_URL = "https://uqcsnzljeiouzjrclecm.supabase.co";
 const SB_KEY = "sb_publishable_mKy3trJA5vDi3MUSOIP69g_Ea2A-u9C";
 let sb = null, sbW = null, canWrite = false, canNote = true, relCode = "";
 const state = { groups: {}, notes: {}, senales: {}, votos: {}, nube: {} };
-let current = null, step = "0", ring = "a", ntype = "oportunidad", sortByVotes = false;
+let current = null, step = "R", ring = "a", ntype = "oportunidad", sortByVotes = false;
 const queues = {};
 function enqueue(key, fn) { queues[key] = (queues[key] || Promise.resolve()).then(async () => { const r = await fn(); if (r && r.error) throw r.error; }).catch(handleErr); return queues[key]; }
 function handleErr(e) {
@@ -619,7 +652,7 @@ function renderVote() {
   <div class="vlist">${CL.map(c => `<div class="vrow${mc[c.id] ? " mine" : ""}" style="--cc:${c.col}"><span class="ncode" style="background:${c.col};${darkTxt(c.id) ? "color:#2b2100" : ""}">${c.id}</span><div><div class="nm">${esc(c.n)}</div><div class="sub">${tl[c.id] || 0} voto${(tl[c.id] || 0) === 1 ? "" : "s"} del grupo</div></div><div class="ctl"><button data-mv="${c.id}" data-d="-1" aria-label="Quitar mi punto de ${esc(c.n)}" ${mc[c.id] ? "" : "disabled"}>−</button><span>${mc[c.id] || 0}</span><button class="add" data-mv="${c.id}" data-d="1" aria-label="Dar un punto a ${esc(c.n)}" ${left > 0 && canWrite ? "" : "disabled"}>+</button></div></div>`).join("")}</div>`;
 }
 function onVotes() { if (mode === "votar") { renderVote(); return; } if (step === "1") renderClas(); if (step === "3") renderPlen(); }
-function setMode(m) { mode = m; $(".steps").hidden = m === "votar"; $("#groupArea").hidden = m === "votar"; $("#s0").hidden = true; $("#vmode").hidden = m !== "votar"; if (m === "votar") renderVote(); else render(); }
+function setMode(m) { mode = m; $(".steps").hidden = m === "votar"; $("#groupArea").hidden = m === "votar"; $("#s0").hidden = true; $("#sR").hidden = true; $("#vmode").hidden = m !== "votar"; if (m === "votar") renderVote(); else render(); }
 const darkTxt = id => id === "C5" || id === "C7" || id === "C8";
 const fresh = {}, mineIds = new Set();
 function markFresh(id) { if (!mineIds.has(id)) fresh[id] = Date.now(); }
@@ -628,6 +661,38 @@ const isFresh = id => fresh[id] && Date.now() - fresh[id] < 2600;
 const fl = id => isFresh(id) ? " flash" : "";
 let booted = false, sameG = false, lastRG = null;
 function pulse(el) { if (!el) return; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+const RIC = {
+  hizo: '<circle cx="12" cy="12" r="2"/><path d="M8 8a5.5 5.5 0 000 8M16 8a5.5 5.5 0 010 8M5 5a10 10 0 000 14M19 5a10 10 0 010 14"/>',
+  prio: '<path d="M4 20h16"/><rect x="5" y="11" width="4" height="9"/><rect x="10" y="6" width="4" height="14"/><rect x="15" y="14" width="4" height="6"/>',
+  quieren: '<path d="M12 15l-3-3c1-5 4.5-8 10-9-1 5.5-4 9-9 10z"/><path d="M9 12l-4 1-2 3 4-1M12 15l-1 4-3 2 1-4"/>',
+  temen: '<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17v.5"/>',
+  merida: '<path d="M2 20l7-12 4 6 3-4 6 10H2z"/>',
+  hacer: '<path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/>'
+};
+const ricon = k => `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${RIC[k]}</svg>`;
+const RES = [
+  ["hizo", "Qué se hizo", "28 jóvenes de la Universidad de Los Andes identificaron 132 señales de cambio, las ordenaron en 13 grandes temas e imaginaron cómo serían Venezuela y Mérida en 2050 si esas señales se vuelven tendencia."],
+  ["prio", "Qué les importa más", "La universidad del futuro fue la primera prioridad de los dos grupos, seguida de la economía digital e IA y de la reapertura económica."],
+  ["quieren", "El país que quieren", "Una Venezuela que suma conocimiento, tecnología y emprendimiento al petróleo y al agro, sin desplazarlos, con universidades conectadas al empleo, IA con criterio propio y talento que regresa."],
+  ["temen", "El país que temen", "Jóvenes formados para trabajos que no existen, fuga de talento, empleo precario y una IA que crea dependencia y desigualdad."],
+  ["merida", "El papel de Mérida", "Puede ser el laboratorio de esa Venezuela: polo de conocimiento, agua, agro y talento. El riesgo es una ciudad que consume y no produce, con vivienda cara y gentrificación."],
+  ["hacer", "Qué hacer desde ya", "Conectar la universidad con las empresas, actualizar pensum y docentes en IA, impulsar una ley de primer empleo y cuidar el agua, el ambiente y el agro."]
+];
+function renderRes() {
+  const all = {}; Object.values(state.votos).forEach(v => { all[v.cluster] = (all[v.cluster] || 0) + 1; });
+  const ids = CL.map(c => c.id).filter(id => all[id]).sort((a, b) => all[b] - all[a] || CL.findIndex(c => c.id === a) - CL.findIndex(c => c.id === b));
+  const top = ids.slice(0, 3), gs = groupIds();
+  const nNotas = Object.keys(state.notes).length;
+  $("#sR").innerHTML = `
+  <div class="rfi"><span><b>22 de octubre de 2026</b> · Sala BCV, Universidad de Los Andes, Mérida</span><span><b>28</b> jóvenes</span><span><b>${gs.length || 2}</b> grupos</span><span>Relatoría: ${gs.map(id => esc(state.groups[id].relator || state.groups[id].nombre)).join(" y ") || "Peter Ibarra y Laura Figueroa"}</span></div>
+  <div class="rhd"><span class="r2">2050</span><div><p class="rk">En pocas palabras</p><h2>Los jóvenes de la ULA imaginan una Venezuela 2050 que vive del conocimiento <em>sin dejar atrás</em> lo que ya es: el petróleo y el agro.</h2><p>Para llegar ahí, la clave es una universidad renovada y conectada con el empleo, y Mérida puede ser el primer lugar donde se pruebe.</p></div></div>
+  <div class="rgr">${RES.map(([k, h, p]) => `<article class="rcard"><span class="ri">${ricon(k)}</span><h3>${h}</h3><p>${p}</p></article>`).join("")}</div>
+  <div class="rtw">
+    <div class="rbox"><h3>Las tres prioridades</h3>${top.length ? `<ol class="rpod">${top.map((id, i) => `<li style="--cc:${byId[id].col}"><span class="pn">${i + 1}</span><b>${esc(byId[id].n)}</b><span class="pc">${id}</span></li>`).join("")}</ol>` : `<p class="hint">Aún no hay clasificación.</p>`}</div>
+    <div class="rbox"><h3>En el centro de cada rueda</h3><div class="rcen">${gs.map(id => { const g = state.groups[id], cs = centerOf(g, 1); return `<div class="rc1"><span class="gn">${esc(g.nombre)}</span>${cs.length ? cs.map(x => `<span class="cc" style="--cc:${byId[x].col}">${x} · ${esc(byId[x].n)}</span>`).join("") : `<span class="hint">Sin clúster</span>`}</div>`; }).join("")}</div><p class="hint" style="font-style:normal">${nNotas} ideas en las ruedas de futuros.</p></div>
+  </div>
+  <div class="rgo"><span>Recorre el proceso:</span><button class="pill" data-step="0">Universo de señales</button><button class="pill" data-step="1">1 · Clasificación</button><button class="pill" data-step="2">2 · Trascendencia</button><button class="pill" data-step="3">3 · Plenaria</button></div>`;
+}
 function porqueHtml(g, full) {
   if (!g || (!g.porque && !g.movidas)) return full ? `<h3>Por qué votaron así</h3><p class="none">Todavía no hay resumen de la clasificación de este grupo.</p>` : "";
   const ls = String(g.porque || "").split(/\n+/).map(s => s.trim()).filter(Boolean);
@@ -647,7 +712,8 @@ function render() {
   $("#gchips").innerHTML = ids.map(id => `<button class="pill${id === current ? " on" : ""}${fl(id)}" data-g="${id}">${esc(state.groups[id].nombre || "Grupo")}</button>`).join("");
   document.querySelectorAll(".steps button").forEach(b => b.setAttribute("aria-selected", b.dataset.step === step));
   $('[data-step="0"] small').textContent = 132 + senalIds().length;
-  $("#s0").hidden = step !== "0"; $("#groupArea").hidden = step === "0";
+  $("#sR").hidden = step !== "R"; $("#s0").hidden = step !== "0"; $("#groupArea").hidden = step === "0" || step === "R";
+  if (step === "R") { renderRes(); return; }
   if (step === "0") { renderUni(); return; }
   $("#noGroup").hidden = !!ids.length; $("#work").hidden = !ids.length;
   document.querySelectorAll("#groupArea input,#groupArea textarea,#groupArea select,#newgbtn,#gdel").forEach(el => { el.disabled = !canWrite; });
