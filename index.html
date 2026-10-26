@@ -255,6 +255,35 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .rc1{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .rc1 .gn{font-family:var(--display);font-weight:800;font-size:14px;min-width:70px}
 .rc1 .cc{font-size:13px;font-weight:700;background:var(--bg);border-left:5px solid var(--cc);border-radius:8px;padding:5px 10px}
+.rsec{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:12px}
+.rsec h3{margin:0;font-family:var(--display);font-size:18px}
+.rk2{margin:0;font-family:var(--display);font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--brand)}
+.rtm{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:10px}
+.rtm article{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:6px;align-content:start}
+.rtm h4{margin:0;font-family:var(--display);font-size:14.5px}
+.rtm p{margin:0;font-size:13px;line-height:1.45;border-radius:8px;padding:6px 8px}
+.rtm p b{display:block;font-family:var(--display);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+.rtm .d{background:var(--nb-soft)}.rtm .d b{color:var(--nb)}.rtm .n{background:var(--nc-soft)}.rtm .n b{color:var(--nc)}
+.rme{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px}
+.rme>div{border-radius:12px;padding:14px;display:grid;gap:6px;font-size:14px;line-height:1.5}
+.rme b{font-family:var(--display);font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.rme .want{background:var(--brand);color:#fff}.rme .avoid{background:var(--nc-soft)}.rme .avoid b{color:var(--nc)}
+.rfu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.rfu{grid-template-columns:1fr}}
+.rfu article{border-radius:12px;padding:14px;display:grid;gap:4px;background:var(--bg);border:1px solid var(--line)}
+.rfu article.good{background:var(--brand);color:#fff;border-color:transparent}.rfu article.bad{background:var(--nc-soft);border-color:transparent}
+.rfu .ax{font-family:var(--display);font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
+.rfu h4{margin:0;font-family:var(--display);font-size:16px}.rfu p{margin:0;font-size:13.5px;line-height:1.45}
+.rru{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;position:relative}
+.rru::before{content:"";position:absolute;left:0;right:0;top:9px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--line),var(--brand))}
+.rru>div{display:grid;gap:4px;align-content:start;position:relative}
+.rru .rdot{width:22px;height:22px;border-radius:50%;background:var(--surface);border:5px solid var(--brand)}
+.rru .last .rdot{background:var(--brand)}
+.rru .yy{font-family:var(--display);font-weight:900;font-size:24px;color:var(--brand);line-height:1}
+.rru b{font-family:var(--display);font-size:13.5px}
+.rru ul{margin:0;padding-left:16px;font-size:13px;line-height:1.45;display:grid;gap:3px}
+@media (max-width:760px){.rru{grid-template-columns:1fr 1fr}.rru::before{display:none}}
+.rrc{margin:0;padding-left:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:6px 20px;font-size:14px;font-weight:600}
 .rgo{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px;color:var(--muted)}
 .pq{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:16px 18px;display:grid;gap:10px}
 .pq h3{font-family:var(--display);font-size:17px;margin:0;color:var(--brand)}
@@ -678,6 +707,28 @@ const RES = [
   ["merida", "El papel de Mérida", "Puede ser el laboratorio de esa Venezuela: polo de conocimiento, agua, agro y talento. El riesgo es una ciudad que consume y no produce, con vivienda cara y gentrificación."],
   ["hacer", "Qué hacer desde ya", "Conectar la universidad con las empresas, actualizar pensum y docentes en IA, impulsar una ley de primer empleo y cuidar el agua, el ambiente y el agro."]
 ];
+const RTEMAS = [
+  ["Una economía que suma sin desplazar", "Lo nuevo se integra al petróleo y al agro: «sembrar el petróleo» en educación y agricultura.", "Acuerdos petroleros opacos y una apertura sin más libertades."],
+  ["La educación es el proyecto de país", "Reforma universitaria, pensum actualizados y Venezuela de vuelta en PISA.", "Jóvenes formados para un mercado laboral que no existe."],
+  ["Trabajo digno en una economía digital", "IA como motor de productividad, ley de primer empleo y jóvenes que emprenden.", "Freelance precario, pluriempleo y una IA que profundiza la desigualdad."],
+  ["Un Estado descentralizado", "Romper los silos centralistas: «el verdadero desarrollo viene de las instituciones».", "Gobernanza débil y la pregunta: ¿por qué las cosas no han cambiado?"],
+  ["El talento vuelve", "Retorno del capital humano y oportunidades para quedarse.", "Fuga de cerebros y empresas que contratan afuera."],
+  ["Una sociedad más sana", "Sin «viveza criolla», con salud mental y sin estigmas.", "Una sociedad que ve números y no personas."],
+  ["Un ambiente que funcione", "Alternativas que no contaminen y agua cuidada: sin agua no hay ni IA.", "Agua contaminada, deforestación, minería y falta de preparación ante el riesgo."]
+];
+const RFUT = [
+  ["Talento sin destino", "Universidad renovada · IA precarizante", "Formamos bien, pero para irse: el talento trabaja para afuera.", "mid"],
+  ["Valle del conocimiento", "Universidad renovada · IA inclusiva", "El futuro que buscan: un país que exporta conocimiento y atrae servidores de IA gracias al agua.", "good"],
+  ["Ciudad que consume y no produce", "Universidad desconectada · IA precarizante", "El futuro a evitar: rentismo, precariedad, vivienda cara y agua contaminada.", "bad"],
+  ["Aprender fuera del aula", "Universidad desconectada · IA inclusiva", "La tecnología avanza sin la universidad y crece la desigualdad digital.", "mid"]
+];
+const RRUTA = [
+  ["Ya", "Abrir la universidad", ["Alianzas ULA–empresas y pasantías", "Pensum y docentes al día en IA", "Ordenar el sistema eléctrico y almacenar agua"]],
+  ["2030", "Cambiar la base", ["IA desde primaria y Venezuela en PISA", "Triple hélice en marcha", "Electricidad e internet estables"]],
+  ["2040", "Escalar", ["Sedes tecnológicas en todo el territorio", "Servidores de IA atraídos por el agua de los Andes", "Retorno del talento"]],
+  ["2050", "La Venezuela que quieren", ["Economía diversificada que suma sin desplazar", "Estado descentralizado", "IA al servicio del criterio propio"]]
+];
+const RRECS = ["La universidad como palanca del futuro", "Del título al empleo: insertar antes de graduar", "Inteligencia artificial con condiciones", "Una reapertura que llegue al territorio y sume sin desplazar", "Agua, ambiente, clima y agricultura como base", "Salud, bienestar e identidad", "Consolidar el proceso"];
 function renderRes() {
   const all = {}; Object.values(state.votos).forEach(v => { all[v.cluster] = (all[v.cluster] || 0) + 1; });
   const ids = CL.map(c => c.id).filter(id => all[id]).sort((a, b) => all[b] - all[a] || CL.findIndex(c => c.id === a) - CL.findIndex(c => c.id === b));
@@ -691,6 +742,17 @@ function renderRes() {
     <div class="rbox"><h3>Las tres prioridades</h3>${top.length ? `<ol class="rpod">${top.map((id, i) => `<li style="--cc:${byId[id].col}"><span class="pn">${i + 1}</span><b>${esc(byId[id].n)}</b><span class="pc">${id}</span></li>`).join("")}</ol>` : `<p class="hint">Aún no hay clasificación.</p>`}</div>
     <div class="rbox"><h3>En el centro de cada rueda</h3><div class="rcen">${gs.map(id => { const g = state.groups[id], cs = centerOf(g, 1); return `<div class="rc1"><span class="gn">${esc(g.nombre)}</span>${cs.length ? cs.map(x => `<span class="cc" style="--cc:${byId[x].col}">${x} · ${esc(byId[x].n)}</span>`).join("") : `<span class="hint">Sin clúster</span>`}</div>`; }).join("")}</div><p class="hint" style="font-style:normal">${nNotas} ideas en las ruedas de futuros.</p></div>
   </div>
+  <div class="rsec"><p class="rk2">Venezuela 2050</p><h3>Siete temas: lo que desean y lo que temen</h3>
+    <div class="rtm">${RTEMAS.map(([h, d, n]) => `<article><h4>${h}</h4><p class="d"><b>Desean</b>${d}</p><p class="n"><b>Temen</b>${n}</p></article>`).join("")}</div></div>
+  <div class="rsec"><p class="rk2">Mérida 2050</p><h3>Dos Méridas posibles</h3>
+    <div class="rme"><div class="want"><b>La que quieren</b><span>Un polo nacional de conocimiento, innovación y talento: la ULA como motor, hub de fintech y startups, turismo sostenible y el agua como ventaja para atraer servidores de IA.</span></div><div class="avoid"><b>La que hay que evitar</b><span>Una ciudad que consume y no produce: fuga de talento, deserción, trabajo precario, vivienda cara, gentrificación y presión inmobiliaria.</span></div></div>
+    <p class="hint" style="font-style:normal">El puente: Mérida aporta talento, investigación, agua y agro; necesita del país una reapertura que llegue al territorio, descentralización, servicios estables y una reforma universitaria nacional.</p></div>
+  <div class="rsec"><p class="rk2">Escenarios</p><h3>Cuatro futuros para Venezuela y Mérida en 2050</h3>
+    <div class="rfu">${RFUT.map(([h, ax, d, c]) => `<article class="${c}"><span class="ax">${ax}</span><h4>${h}</h4><p>${d}</p></article>`).join("")}</div></div>
+  <div class="rsec"><p class="rk2">Del presente a 2050</p><h3>La ruta que proponen</h3>
+    <div class="rru">${RRUTA.map(([y, l, it], i) => `<div class="${i === 3 ? "last" : ""}"><span class="rdot"></span><span class="yy">${y}</span><b>${l}</b><ul>${it.map(x => `<li>${x}</li>`).join("")}</ul></div>`).join("")}</div></div>
+  <div class="rsec"><p class="rk2">Consideraciones finales</p><h3>Siete recomendaciones con la mirada en 2050</h3>
+    <ol class="rrc">${RRECS.map(x => `<li>${x}</li>`).join("")}</ol></div>
   <div class="rgo"><span>Recorre el proceso:</span><button class="pill" data-step="0">Universo de señales</button><button class="pill" data-step="1">1 · Clasificación</button><button class="pill" data-step="2">2 · Trascendencia</button><button class="pill" data-step="3">3 · Plenaria</button></div>`;
 }
 function porqueHtml(g, full) {
