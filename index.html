@@ -224,6 +224,15 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .y2050{display:inline-block;background:var(--brand);color:#fff;font-family:var(--display);font-weight:800;border-radius:6px;padding:1px 8px;font-size:13px;margin-right:6px;vertical-align:1px}
 .wlabel{position:absolute;transform:translate(-50%,-50%);font-family:var(--display);font-weight:800;font-size:20px;color:#0a3d6b;pointer-events:none}
 .sticky{position:absolute;transform:translate(-50%,-50%);width:104px;background:var(--tc);color:#fff;font-weight:700;border:2px solid #fff;border-radius:6px;padding:4px 6px;font-size:11px;line-height:1.25;box-shadow:0 2px 6px rgba(0,0,0,.28);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mk{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:var(--tc);color:#fff;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);font-family:var(--display);font-weight:800;font-size:11px;line-height:1;display:grid;place-items:center;padding:0;cursor:pointer;z-index:1}
+.mk.op{box-shadow:0 0 0 3px var(--ok),0 1px 4px rgba(0,0,0,.3)}.mk.ri{box-shadow:0 0 0 3px var(--risk),0 1px 4px rgba(0,0,0,.3)}
+.mk:hover,.mk:focus-visible,.mk.hl{transform:translate(-50%,-50%) scale(1.35);z-index:3}
+@media (max-width:520px){.mk{width:14px;height:14px;border-width:1.5px}}
+.wcenter .fz{display:block;font-size:10px;font-weight:700;line-height:1.2;margin-top:2px}
+.lst li .no{flex:none;min-width:30px;height:22px;border-radius:11px;background:rgba(255,255,255,.22);display:grid;place-items:center;font-family:var(--display);font-size:11px;font-weight:800;margin-top:1px}
+.lst li .tg{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:800;border-radius:4px;padding:1px 6px;vertical-align:1px;background:#fff}
+.lst li .tg.op{color:var(--ok)}.lst li .tg.ri{color:var(--risk)}
+.lst li.hl{outline:3px solid var(--ink);outline-offset:1px}
 .dot{position:absolute;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;background:var(--tc);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px}
 .panel h3{font-family:var(--display);font-size:16px;margin:0}
@@ -391,6 +400,7 @@ footer{font-size:12px;color:var(--muted)}
           </form>
         </div>
       </div>
+      <p class="hint" style="font-style:normal">Cada punto de la rueda es una idea y su número coincide con las listas de abajo. Toca un punto para leerla. Borde verde: oportunidad; borde rojo: riesgo.</p>
       <div class="chips" id="wsel"></div>
       <div class="lists" id="lists"></div>
       <div class="nubep" id="nubeG">
@@ -519,11 +529,14 @@ const wheelsOf = g => [1, ...((g && g.ruedas) || []).map(r => r.n)];
 const activeOf = g => { const a = (g && g.activa) || 1; return wheelsOf(g).includes(a) ? a : 1; };
 const clusterOf = (g, n) => !g ? null : n === 1 ? g.cluster : (((g.ruedas || []).find(r => r.n === n)) || {}).cluster || null;
 function setCluster(gid, n, cid) { const g = state.groups[gid]; if (n === 1) patchGroup(gid, { cluster: cid }, 0); else patchGroup(gid, { ruedas: (g.ruedas || []).map(r => r.n === n ? { n: r.n, cluster: cid } : r) }, 0); }
+const fusOf = (g, n) => ((((g && g.fusion) || {})[n]) || []).filter(x => byId[x]);
+const centerOf = (g, n) => { const c = clusterOf(g, n); return c ? [c, ...fusOf(g, n).filter(x => x !== c)] : []; };
+const centerTxt = (g, n) => centerOf(g, n).join(" + ");
 const notesOfW = (gid, n) => notesOf(gid).filter(([, x]) => (x.rueda || 1) === n);
 function renderWbar() {
   const g = state.groups[current]; if (!g) { $("#wbar").innerHTML = ""; return; }
   const ws = wheelsOf(g), act = activeOf(g);
-  $("#wbar").innerHTML = `<span class="lbl">Ruedas del grupo</span>` + ws.map(n => { const c = byId[clusterOf(g, n)]; return `<button class="wt${n === act ? " on" : ""}" ${canWrite ? `data-wsel="${n}"` : "disabled"} style="--cc:${c ? c.col : "var(--line)"}"><i></i>Rueda ${n}${c ? ` · ${c.id}` : ""}</button>`; }).join("")
+  $("#wbar").innerHTML = `<span class="lbl">Ruedas del grupo</span>` + ws.map(n => { const c = byId[clusterOf(g, n)]; return `<button class="wt${n === act ? " on" : ""}" ${canWrite ? `data-wsel="${n}"` : "disabled"} style="--cc:${c ? c.col : "var(--line)"}"><i></i>Rueda ${n}${c ? ` · ${centerTxt(g, n)}` : ""}</button>`; }).join("")
     + (canWrite ? `<button class="pill" data-wnew="1">+ Nueva rueda</button>${act > 1 ? `<button class="pill ghost" data-wdel="${act}">Eliminar rueda ${act}</button>` : ""}` : "");
 }
 let wdelArmed = false;
@@ -638,7 +651,7 @@ function renderClas() {
       <div class="hd"><span class="code" style="${c.id === "C5" || c.id === "C7" || c.id === "C8" ? "color:#2b2100" : ""}">${c.id}</span><div><div class="nm">${esc(c.n)}</div><div class="ct">${c.s.length} señales${newOf(c.id).length ? ` · ${newOf(c.id).length} nueva${newOf(c.id).length > 1 ? "s" : ""}` : ""}</div></div></div>
       <div class="vote"><button data-vote="${c.id}" data-d="-1" aria-label="Quitar un voto a ${esc(c.n)}">−</button><span class="n">${n}</span><button data-vote="${c.id}" data-d="1" aria-label="Sumar un voto a ${esc(c.n)}">+</button><span class="dots">${"<i></i>".repeat(Math.min(n, 20))}</span></div>
       <details><summary>Ver señales</summary><ul>${c.s.map(([k, t]) => `<li><span>${k}</span>${esc(t)}</li>`).join("")}${newOf(c.id).map(k => `<li><span>${ncode(k)}</span>${esc(state.senales[k].nombre)}<span class="newtag">Nueva</span></li>`).join("")}</ul></details>
-      <div class="cfoot"><span class="ct">${chosen ? `En el centro de la rueda${multi ? " " + act : ""}` : usedIn.length ? `Usado en la rueda ${usedIn.join(" y ")}` : ""}</span><button class="pill${chosen ? " on" : ""}" data-choose="${c.id}">${chosen ? "Elegido" : `Elegir para la rueda${multi ? " " + act : ""}`}</button></div>
+      <div class="cfoot"><span class="ct">${chosen ? `En el centro de la rueda${multi ? " " + act : ""}` : fusOf(g, act).includes(c.id) ? `Fusionado en el centro de la rueda${multi ? " " + act : ""}` : usedIn.length ? `Usado en la rueda ${usedIn.join(" y ")}` : ""}</span><span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">${!chosen && clusterOf(g, act) ? `<button class="pill${fusOf(g, act).includes(c.id) ? " on" : ""}" data-fuse="${c.id}">${fusOf(g, act).includes(c.id) ? "Fusionado ✓" : "Fusionar"}</button>` : ""}<button class="pill${chosen ? " on" : ""}" data-choose="${c.id}">${chosen ? "Elegido" : `Elegir para la rueda${multi ? " " + act : ""}`}</button></span></div>
     </article>`;
   }).join("");
   document.querySelectorAll("#cgrid button").forEach(b => b.disabled = !canWrite);
@@ -669,23 +682,23 @@ function renderRueda() {
   const g = state.groups[current], act = activeOf(g), c = byId[clusterOf(g, act)];
   renderWbar();
   const sl = selOf(current);
-  $("#wcenter").innerHTML = (c ? `<b>${c.id}</b>${esc(c.n)}<span class="y">→ 2050</span>` : "Elijan un clúster<br>en el paso 1") + (sl.length ? `<b style="margin-top:4px">+ ${sl.length} señal${sl.length > 1 ? "es" : ""} nueva${sl.length > 1 ? "s" : ""}</b>` : "");
+  $("#wcenter").innerHTML = (c ? (() => { const cs = centerOf(g, act).map(x => byId[x]); return cs.length > 1 ? `<b>${cs.map(x => x.id).join(" + ")}</b><span class="fz">${cs.map(x => esc(x.n)).join(" + ")}</span><span class="y">→ 2050</span>` : `<b>${c.id}</b>${esc(c.n)}<span class="y">→ 2050</span>`; })() : "Elijan un clúster<br>en el paso 1") + (sl.length ? `<b style="margin-top:4px">+ ${sl.length} señal${sl.length > 1 ? "es" : ""} nueva${sl.length > 1 ? "s" : ""}</b>` : "");
   $("#wsel").innerHTML = sl.length ? `<span style="background:none;border:0;padding:4px 0;color:var(--muted)">Señales nuevas en la rueda:</span>` + sl.map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("") : "";
   $("#ringQ").innerHTML = `<span class="y2050">2050</span>` + esc(RINGQ[ring]);
   $("#actFields").hidden = ring !== "c";
   document.querySelectorAll("#ringSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === ring));
   const ns = notesOfW(current, act);
   const box = $("#wheel"), S = box.clientWidth || 600, small = S < 520;
-  const R = { a: 0.35, b: 0.61, c: 0.865 };
+  const TR = { a: [0.335, 0.425], b: [0.565, 0.685], c: [0.81, 0.93] };
   let html = "";
   ["a", "b", "c"].forEach((r, ri) => {
-    const items = ns.filter(([, n]) => n.anillo === r), k = items.length;
+    const items = ns.filter(([, n]) => n.anillo === r), k = items.length, two = k > (r === "a" ? 10 : r === "b" ? 16 : 24);
     items.forEach(([id, n], i) => {
-      const ang = -Math.PI / 2 + (i + 0.5) * 2 * Math.PI / Math.max(k, 1) + ri * 0.35;
-      const x = 50 + R[r] * 50 * Math.cos(ang), y = 50 + R[r] * 50 * Math.sin(ang);
-      const tc = `var(--n${n.anillo})`, ts = `var(--n${n.anillo}-soft)`;
-      html += small ? `<span class="dot${fl(id)}" style="left:${x}%;top:${y}%;--tc:${tc}" title="${esc(n.texto)}"></span>`
-        : `<div class="sticky${fl(id)}" style="left:${x}%;top:${y}%;--tc:${tc};--ts:${ts}" title="${esc(n.texto)}">${esc(n.texto)}</div>`;
+      const ang = -Math.PI / 2 + (i + 0.5) * 2 * Math.PI / Math.max(k, 1) + ri * 0.21;
+      const rr = two ? TR[r][i % 2] : (TR[r][0] + TR[r][1]) / 2;
+      const x = 50 + rr * 50 * Math.cos(ang), y = 50 + rr * 50 * Math.sin(ang);
+      const tp = n.tipo === "oportunidad" ? " op" : n.tipo === "riesgo" ? " ri" : "";
+      html += `<button type="button" class="mk${tp}${fl(id)}" data-mk="${id}" style="left:${x}%;top:${y}%;--tc:var(--n${r})" title="${esc(n.texto)}" aria-label="${r}${i + 1}: ${esc(n.texto)}">${small ? "" : i + 1}</button>`;
     });
   });
   $("#wnotes").innerHTML = html;
@@ -694,7 +707,7 @@ function renderRueda() {
   $("#lists").innerHTML = ["a", "b", "c"].map(r => {
     const items = ns.filter(([, n]) => n.anillo === r);
     return `<div class="lst" style="--rc:${rc[r]};--rs:var(--n${r}-soft)"><h4><span class="badge">${r}</span>${lab[r].slice(4)} <span class="ct">(${items.length})</span></h4>${items.length ? `<ul>${items.map(([id, n]) =>
-      `<li class="${fl(id).trim()}"><span class="tx">${esc(n.texto)}${n.tipo === "accion" ? `<span class="who">${esc(n.quien)} · ${esc(n.cuando)}</span>` : ""}</span>${canWrite ? `<button data-del="${id}" aria-label="Borrar nota">×</button>` : ""}</li>`).join("")}</ul>` : `<p class="none">Aún no hay ideas en este anillo.</p>`}</div>`;
+      `<li class="${fl(id).trim()}" data-li="${id}"><span class="no">${r}${items.findIndex(([k]) => k === id) + 1}</span><span class="tx">${esc(n.texto)}${n.tipo === "oportunidad" ? `<span class="tg op">Oportunidad</span>` : n.tipo === "riesgo" ? `<span class="tg ri">Riesgo</span>` : ""}${n.tipo === "accion" ? `<span class="who">${esc(n.quien)} · ${esc(n.cuando)}</span>` : ""}</span>${canWrite ? `<button data-del="${id}" aria-label="Borrar nota">×</button>` : ""}</li>`).join("")}</ul>` : `<p class="none">Aún no hay ideas en este anillo.</p>`}</div>`;
   }).join("");
 }
 function renderPlen() {
@@ -708,7 +721,7 @@ function renderPlen() {
       const cnt = r => ns.filter(x => x.anillo === r).length;
       const top = r => ns.filter(x => x.anillo === r).slice(0, 3).map(x => `<li>${esc(x.texto)}${x.tipo === "accion" ? ` <span class="ct">(${esc(x.quien)})</span>` : ""}</li>`).join("");
       return `<div style="display:grid;gap:8px;${multi ? "border-top:1px solid var(--line);padding-top:8px" : ""}">
-        <div class="cl" style="--cc:${cw ? cw.col : "var(--line)"}"><i></i>${multi ? `Rueda ${n} · ` : ""}${cw ? `${cw.id} · ${esc(cw.n)}` : "Sin clúster elegido"}</div>
+        <div class="cl" style="--cc:${cw ? cw.col : "var(--line)"}"><i></i>${multi ? `Rueda ${n} · ` : ""}${cw ? centerOf(g, n).map(x => `${x} · ${esc(byId[x].n)}`).join(" + ") : "Sin clúster elegido"}</div>
         <div class="stats"><span class="tag" style="background:var(--na-soft);color:var(--na)">${cnt("a")} en a · país</span><span class="tag" style="background:var(--nb-soft);color:var(--nb)">${cnt("b")} en b · jóvenes</span><span class="tag" style="background:var(--nc-soft);color:var(--nc)">${cnt("c")} en c · acciones</span></div>
         ${cnt("a") ? `<h5 style="color:var(--na)">a · País y Mérida</h5><ul>${top("a")}</ul>` : ""}
         ${cnt("b") ? `<h5 style="color:var(--nb)">b · Juventud</h5><ul>${top("b")}</ul>` : ""}
@@ -726,14 +739,19 @@ function renderPlen() {
 }
 
 /* ---------- events ---------- */
+function hlNote(id, on) { document.querySelectorAll(`[data-mk="${id}"],[data-li="${id}"]`).forEach(x => x.classList.toggle("hl", on)); }
+document.addEventListener("mouseover", e => { const x = e.target.closest("[data-mk],[data-li]"); if (x) hlNote(x.dataset.mk || x.dataset.li, true); });
+document.addEventListener("mouseout", e => { const x = e.target.closest("[data-mk],[data-li]"); if (x) hlNote(x.dataset.mk || x.dataset.li, false); });
 document.addEventListener("click", e => {
   const t = e.target.closest("button"); if (!t) return;
+  if (t.dataset.mk) { const li = document.querySelector(`[data-li="${t.dataset.mk}"]`); if (li) { li.scrollIntoView({ behavior: "smooth", block: "center" }); pulse(li); } return; }
   if (t.dataset.g) { current = t.dataset.g; render(); return; }
   if (t.dataset.step) { step = t.dataset.step; render(); return; }
-  if (!canWrite && (t.dataset.vote || t.dataset.choose || t.dataset.del)) return;
+  if (!canWrite && (t.dataset.vote || t.dataset.choose || t.dataset.del || t.dataset.fuse)) return;
   if (t.dataset.vote) { castVote(current, t.dataset.vote, Number(t.dataset.d), false); return; }
   if (t.dataset.mv) { castVote(current, t.dataset.mv, Number(t.dataset.d), true); return; }
   if (t.dataset.vg) { current = t.dataset.vg; renderVote(); return; }
+  if (t.dataset.fuse && canWrite) { const g = state.groups[current], act = activeOf(g), cur = fusOf(g, act), id = t.dataset.fuse; patchGroup(current, { fusion: { ...((g && g.fusion) || {}), [act]: cur.includes(id) ? cur.filter(x => x !== id) : [...cur, id] } }, 0); renderClas(); return; }
   if (t.dataset.choose) { const g = state.groups[current], act = activeOf(g); setCluster(current, act, clusterOf(g, act) === t.dataset.choose ? null : t.dataset.choose); renderClas(); return; }
   if (t.dataset.wsel && canWrite) { patchGroup(current, { activa: Number(t.dataset.wsel) }, 0); render(); return; }
   if (t.dataset.wnew && canWrite) { const g = state.groups[current], n = Math.max(...wheelsOf(g)) + 1; if (n > 20) return; patchGroup(current, { ruedas: [...(g.ruedas || []), { n, cluster: null }], activa: n }, 0); step = "1"; render(); showStatus(`Rueda ${n} creada. Elijan su clúster aquí en 1 · Clasificación y luego pasen a 2 · Trascendencia.`); setTimeout(() => showStatus(""), 6000); return; }
@@ -834,7 +852,7 @@ function md() {
   groupIds().forEach(id => {
     const g = state.groups[id];
     const wsm = wheelsOf(g).filter(n => n === 1 || clusterOf(g, n) || notesOfW(id, n).length);
-    o += `## ${g.nombre}\n\nRelator/a: ${g.relator || "—"}\n\n` + wsm.map(n => { const cw = byId[clusterOf(g, n)]; return `${wsm.length > 1 ? `Rueda ${n} · ` : ""}Clúster: ${cw ? `${cw.id} · ${cw.full}` : "—"}`; }).join("\n\n") + "\n\n";
+    o += `## ${g.nombre}\n\nRelator/a: ${g.relator || "—"}\n\n` + wsm.map(n => { const cw = byId[clusterOf(g, n)]; return `${wsm.length > 1 ? `Rueda ${n} · ` : ""}Clúster: ${cw ? centerOf(g, n).map(x => `${x} · ${byId[x].full}`).join(" + ") : "—"}`; }).join("\n\n") + "\n\n";
     const v = tally(id); const vs = CL.filter(k => v[k.id]).sort((a, b) => v[b.id] - v[a.id]).map(k => `${k.n} (${v[k.id]})`).join(", ");
     if (vs) o += `Votos: ${vs}\n\n`;
     if (g.porque) o += `**Por qué lo eligieron:** ${g.porque}\n\n`;
