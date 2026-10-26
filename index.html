@@ -700,7 +700,7 @@ const RIC = {
 };
 const ricon = k => `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${RIC[k]}</svg>`;
 const RES = [
-  ["hizo", "Qué se hizo", "28 jóvenes de la Universidad de Los Andes identificaron 132 señales de cambio, las ordenaron en 13 grandes temas e imaginaron cómo serían Venezuela y Mérida en 2050 si esas señales se vuelven tendencia."],
+  ["hizo", "Qué se hizo", "30 jóvenes de la Universidad de Los Andes identificaron 132 señales de cambio, las ordenaron en 13 grandes temas e imaginaron cómo serían Venezuela y Mérida en 2050 si esas señales se vuelven tendencia."],
   ["prio", "Qué les importa más", "La universidad del futuro fue la primera prioridad de los dos grupos, seguida de la economía digital e IA y de la reapertura económica."],
   ["quieren", "El país que quieren", "Una Venezuela que suma conocimiento, tecnología y emprendimiento al petróleo y al agro, sin desplazarlos, con universidades conectadas al empleo, IA con criterio propio y talento que regresa."],
   ["temen", "El país que temen", "Jóvenes formados para trabajos que no existen, fuga de talento, empleo precario y una IA que crea dependencia y desigualdad."],
@@ -735,7 +735,7 @@ function renderRes() {
   const top = ids.slice(0, 3), gs = groupIds();
   const nNotas = Object.keys(state.notes).length;
   $("#sR").innerHTML = `
-  <div class="rfi"><span><b>22 de octubre de 2026</b> · Sala BCV, Universidad de Los Andes, Mérida</span><span><b>28</b> jóvenes</span><span><b>${gs.length || 2}</b> grupos</span><span>Relatoría: ${gs.map(id => esc(state.groups[id].relator || state.groups[id].nombre)).join(" y ") || "Peter Ibarra y Laura Figueroa"}</span></div>
+  <div class="rfi"><span><b>22 de octubre de 2026</b> · Sala BCV, Universidad de Los Andes, Mérida</span><span><b>30</b> jóvenes</span><span><b>${gs.length || 2}</b> grupos</span><span>Relatoría: ${gs.map(id => esc(state.groups[id].relator || state.groups[id].nombre)).join(" y ") || "Peter Ibarra y Laura Figueroa"}</span></div>
   <div class="rhd"><span class="r2">2050</span><div><p class="rk">En pocas palabras</p><h2>Los jóvenes de la ULA imaginan una Venezuela 2050 que vive del conocimiento <em>sin dejar atrás</em> lo que ya es: el petróleo y el agro.</h2><p>Para llegar ahí, la clave es una universidad renovada y conectada con el empleo, y Mérida puede ser el primer lugar donde se pruebe.</p></div></div>
   <div class="rgr">${RES.map(([k, h, p]) => `<article class="rcard"><span class="ri">${ricon(k)}</span><h3>${h}</h3><p>${p}</p></article>`).join("")}</div>
   <div class="rtw">
