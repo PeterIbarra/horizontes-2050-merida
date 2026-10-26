@@ -226,6 +226,15 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .wlabel{position:absolute;transform:translate(-50%,-50%);font-family:var(--display);font-weight:800;font-size:20px;color:#0a3d6b;pointer-events:none}
 .sticky{position:absolute;transform:translate(-50%,-50%);width:104px;background:var(--tc);color:#fff;font-weight:700;border:2px solid #fff;border-radius:6px;padding:4px 6px;font-size:11px;line-height:1.25;box-shadow:0 2px 6px rgba(0,0,0,.28);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .cw{width:100%}
+.pq{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:16px 18px;display:grid;gap:10px}
+.pq h3{font-family:var(--display);font-size:17px;margin:0;color:var(--brand)}
+.pq .pi{margin:0;font-size:15px;font-weight:600;line-height:1.5}
+.pq ul{margin:0;padding-left:20px;display:grid;gap:8px;font-size:14.5px;line-height:1.5}
+.pq ul b{font-family:var(--display);font-weight:800}
+.pq .pm{margin:0;font-size:13.5px;color:var(--muted)}
+.pq .none{margin:0;font-size:14px;color:var(--muted)}
+.pqd summary{cursor:pointer;font-weight:700;color:var(--brand);font-size:13.5px}
+.pqd .pq{margin-top:8px;padding:12px}
 .rw .wheelbox{max-width:860px}
 .rq{font-family:var(--display);font-weight:800;font-size:3.3px;letter-spacing:.02em}
 .wtip{position:absolute;transform:translate(-50%,calc(-100% - 18px));width:min(300px,80%);background:#fff;color:var(--ink);border-left:5px solid var(--tc);border-radius:10px;padding:9px 11px;font-size:13.5px;font-weight:600;line-height:1.35;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:5;pointer-events:none}
@@ -401,10 +410,7 @@ footer{font-size:12px;color:var(--muted)}
         <div class="seg" id="nfil"><button data-nf="todas" aria-pressed="true">Todas</button><button data-nf="grupo" aria-pressed="false">De este grupo</button><button data-nf="sel" aria-pressed="false">Seleccionadas</button></div>
         <div class="nlist" id="nlist"></div>
       </div>
-      <div class="two">
-        <div class="field"><label for="porque">¿Por qué lo eligieron?</label><textarea id="porque"></textarea></div>
-        <div class="field"><label for="movidas">Señales que movieron de clúster</label><textarea id="movidas"></textarea></div>
-      </div>
+      <div class="pq" id="porque"></div>
     </section>
 
     <section id="s2" style="display:grid;gap:16px;margin-top:4px" hidden>
@@ -622,6 +628,13 @@ const isFresh = id => fresh[id] && Date.now() - fresh[id] < 2600;
 const fl = id => isFresh(id) ? " flash" : "";
 let booted = false, sameG = false, lastRG = null;
 function pulse(el) { if (!el) return; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+function porqueHtml(g, full) {
+  if (!g || (!g.porque && !g.movidas)) return full ? `<h3>Por qué votaron así</h3><p class="none">Todavía no hay resumen de la clasificación de este grupo.</p>` : "";
+  const ls = String(g.porque || "").split(/\n+/).map(s => s.trim()).filter(Boolean);
+  const intro = ls.filter(s => !s.startsWith("•")), its = ls.filter(s => s.startsWith("•")).map(s => s.replace(/^•\s*/, ""));
+  const li = s => { const m = s.match(/^([^.]+?\))\.\s*(.*)$/) || s.match(/^([^.]{3,80})\.\s+(.*)$/); return m ? `<li><b>${esc(m[1])}.</b> ${esc(m[2])}</li>` : `<li>${esc(s)}</li>`; };
+  return `${full ? `<h3>Por qué votaron así</h3>` : ""}${intro.map(s => `<p class="pi">${esc(s)}</p>`).join("")}${its.length ? `<ul>${its.map(li).join("")}</ul>` : ""}${g.movidas ? `<p class="pm"><b>Señales que movieron de clúster:</b> ${esc(g.movidas)}</p>` : ""}`;
+}
 function setVal(el, v) { if (document.activeElement !== el && el.value !== (v || "")) { const had = el.value !== "" || (v || "") !== ""; el.value = v || ""; if (booted && had && sameG) pulse(el); } }
 
 function render() {
@@ -643,7 +656,7 @@ function render() {
   if (!current) return;
   const g = state.groups[current];
   setVal($("#gname"), g.nombre); setVal($("#grel"), g.relator);
-  setVal($("#porque"), g.porque); setVal($("#movidas"), g.movidas);
+  $("#porque").innerHTML = porqueHtml(g, true);
 
   ["1", "2", "3"].forEach(s => $("#s" + s).hidden = s !== step);
   if (step === "1") renderClas(); if (step === "2") renderRueda(); if (step === "3") renderPlen();
@@ -773,6 +786,7 @@ function renderPlen() {
       ${(() => { const tl = tally(id), top = CL.filter(k => tl[k.id]).sort((a, b) => tl[b.id] - tl[a.id]).slice(0, 3); return top.length ? `<div class="ct"><b>Más votados:</b> ${top.map(k => `${esc(k.n)} (${tl[k.id]} voto${tl[k.id] === 1 ? "" : "s"})`).join(" · ")}</div>` : ""; })()}
       ${selOf(id).length ? `<div class="chips">${selOf(id).map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("")}</div>` : ""}
       ${(() => { const nw = cloudWords(nubeOf(id)).slice(0, 6); return nw.length ? `<div class="ct"><b>Así se imaginan Venezuela:</b> ${nw.map(w => esc(w.txt)).join(" · ")}</div>` : ""; })()}
+      ${g.porque ? `<details class="pqd"><summary>Por qué votaron así</summary><div class="pq">${porqueHtml(g, false)}</div></details>` : ""}
       ${ws.map(wheelHtml).join("")}
     </article>`;
   }).join("") || `<div class="empty">Todavía no hay grupos.</div>`;
@@ -824,7 +838,7 @@ $("#gdel").onclick = e => {
   delArmed = false; e.currentTarget.textContent = "Eliminar grupo"; e.currentTarget.classList.remove("danger"); deleteGroup(current);
 };
 const bindText = (sel, field, delay = 350) => $(sel).addEventListener("input", e => { if (!current) return; patchGroup(current, { [field]: e.target.value }, delay); if (field === "nombre") $("#gchips").querySelector(`[data-g="${current}"]`).textContent = e.target.value || "Grupo"; });
-bindText("#gname", "nombre"); bindText("#grel", "relator"); bindText("#porque", "porque"); bindText("#movidas", "movidas");
+bindText("#gname", "nombre"); bindText("#grel", "relator"); 
 
 $("#noteForm").onsubmit = e => {
   e.preventDefault(); if (!canNote || !current) return;
