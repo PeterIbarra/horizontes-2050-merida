@@ -226,6 +226,14 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .wlabel{position:absolute;transform:translate(-50%,-50%);font-family:var(--display);font-weight:800;font-size:20px;color:#0a3d6b;pointer-events:none}
 .sticky{position:absolute;transform:translate(-50%,-50%);width:104px;background:var(--tc);color:#fff;font-weight:700;border:2px solid #fff;border-radius:6px;padding:4px 6px;font-size:11px;line-height:1.25;box-shadow:0 2px 6px rgba(0,0,0,.28);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .cw{width:100%}
+.rw .wheelbox{max-width:860px}
+.rq{font-family:var(--display);font-weight:800;font-size:3.3px;letter-spacing:.02em}
+.wtip{position:absolute;transform:translate(-50%,calc(-100% - 18px));width:min(300px,80%);background:#fff;color:var(--ink);border-left:5px solid var(--tc);border-radius:10px;padding:9px 11px;font-size:13.5px;font-weight:600;line-height:1.35;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:5;pointer-events:none}
+.wtip.up{transform:translate(-50%,calc(-100% - 18px))}
+.wtip:not(.up){transform:translate(-50%,18px)}
+.wtip b{color:var(--tc);margin-right:4px}
+.wtip .who{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+.lh{font-family:var(--display);font-size:18px;margin:8px 0 0;text-align:center}
 .band{border-radius:44px;padding:18px 18px 18px;display:grid;gap:12px;background:var(--ring-c)}
 .band.bb{background:var(--ring-b);border-radius:38px}
 .band.ba{background:var(--ring-a);border-radius:32px}
@@ -403,6 +411,8 @@ footer{font-size:12px;color:var(--muted)}
       <div class="wbar" id="wbar"></div>
       <div class="r2050"><b>2050</b><span>Imaginemos que ya llegamos a 2050: ¿cómo es Venezuela si este clúster se vuelve la tendencia?</span></div>
       <div class="rueda">
+        <div class="rw" id="rwheel"></div>
+        <h3 class="lh">Todas las ideas de la rueda</h3>
         <div class="cw" id="wheel"></div>
         <div class="panel">
           <h3>Agregar una idea</h3>
@@ -714,6 +724,24 @@ function renderRueda() {
     return `<div class="band b${r}"><div class="bq"><span class="bl">${RL[r]}</span><span class="bqq"><span class="y2050">2050</span>${esc(RINGQ[r])}</span><span class="bct">${items.length} idea${items.length === 1 ? "" : "s"}</span></div>${top ? `<div class="nts">${top}</div>` : `<p class="none">Aún no hay ideas en este anillo.</p>`}${inner}${bot ? `<div class="nts">${bot}</div>` : ""}</div>`;
   };
   $("#wheel").innerHTML = band("c", band("b", band("a", core)));
+  // rueda circular
+  const RB = { c: [74, 99], b: [48, 74], a: [22, 48] };
+  const RF = { a: "#0a3d6b", b: "#0d4a1f", c: "#7a2f05" };
+  let svg = `<svg viewBox="0 0 200 200" role="img" aria-label="Rueda de futuros"><defs>${["a", "b", "c"].map(r => { const rr = RB[r][1] - 2.4; return `<path id="tp${r}" d="M 100 ${100 - rr} a ${rr} ${rr} 0 1 1 -0.01 0"/>`; }).join("")}</defs>
+    <circle cx="100" cy="100" r="99" style="fill:var(--ring-c);stroke:#b7d5ef;stroke-width:1"/><circle cx="100" cy="100" r="74" style="fill:var(--ring-b);stroke:#fff;stroke-width:1.6"/><circle cx="100" cy="100" r="48" style="fill:var(--ring-a);stroke:#fff;stroke-width:1.6"/><circle cx="100" cy="100" r="22" style="fill:var(--center);stroke:#fff;stroke-width:1.6"/>
+    ${["a", "b", "c"].map(r => `<text class="rq" style="fill:${RF[r]}"><textPath href="#tp${r}" startOffset="1%">${r.toUpperCase()} · ${esc(RINGQ[r])}</textPath></text>`).join("")}</svg>`;
+  let mk = "";
+  ["a", "b", "c"].forEach((r, ri) => {
+    const items = ns.filter(([, n]) => n.anillo === r), k = items.length, [r0, r1] = RB[r], inner = r0 + 4.5, outer = r1 - 10.5;
+    const tracks = k > (r === "a" ? 12 : r === "b" ? 18 : 26) ? [inner + (outer - inner) * 0.2, inner + (outer - inner) * 0.85] : [(inner + outer) / 2];
+    items.forEach(([id, n], i) => {
+      const ang = -Math.PI / 2 + (i + 0.5) * 2 * Math.PI / Math.max(k, 1) + 0.12 * ri;
+      const rr = tracks[i % tracks.length], x = 50 + rr / 2 * Math.cos(ang), y = 50 + rr / 2 * Math.sin(ang);
+      const tp = n.tipo === "oportunidad" ? " op" : n.tipo === "riesgo" ? " ri" : "";
+      mk += `<button type="button" class="mk${tp}${fl(id)}" data-mk="${id}" data-tip="${r}${i + 1}" style="left:${x}%;top:${y}%;--tc:var(--n${r})" aria-label="${r}${i + 1}: ${esc(n.texto)}">${i + 1}</button>`;
+    });
+  });
+  $("#rwheel").innerHTML = `<div class="wheelbox">${svg}<div class="wcenter">${cs.length ? `<b>${cs.map(x => x.id).join(" + ")}</b><span class="fz">${cs.map(x => esc(x.n)).join(" + ")}</span><span class="y">→ 2050</span>` : "Elijan un clúster<br>en el paso 1"}</div>${mk}<div class="wtip" id="wtip" hidden></div></div><p class="hint" style="font-style:normal;text-align:center">Pasa el cursor o toca un número para leer la idea. Borde verde: oportunidad · borde rojo: riesgo.</p>`;
   const lab = { a: "a · Consecuencias para Venezuela y Mérida", b: "b · Implicaciones para la juventud", c: "c · Acciones desde hoy" };
   const rc = { a: "var(--na)", b: "var(--nb)", c: "var(--nc)" };
   $("#lists").innerHTML = ["a", "b", "c"].map(r => {
@@ -751,12 +779,12 @@ function renderPlen() {
 }
 
 /* ---------- events ---------- */
-function hlNote(id, on) { document.querySelectorAll(`[data-mk="${id}"],[data-li="${id}"]`).forEach(x => x.classList.toggle("hl", on)); }
+function hlNote(id, on) { document.querySelectorAll(`[data-mk="${id}"],[data-li="${id}"]`).forEach(x => x.classList.toggle("hl", on)); const tip = document.getElementById("wtip"), m = document.querySelector(`[data-mk="${id}"]`), n = state.notes[id]; if (!tip) return; if (on && m && n) { tip.innerHTML = `<b>${m.dataset.tip}</b> ${esc(n.texto)}${n.tipo === "accion" ? `<span class="who">${esc(n.quien)} · ${esc(n.cuando)}</span>` : ""}`; tip.style.left = m.style.left; tip.style.top = m.style.top; tip.classList.toggle("up", parseFloat(m.style.top) > 55); tip.style.setProperty("--tc", m.style.getPropertyValue("--tc")); tip.hidden = false; } else if (!on) tip.hidden = true; }
 document.addEventListener("mouseover", e => { const x = e.target.closest("[data-mk],[data-li]"); if (x) hlNote(x.dataset.mk || x.dataset.li, true); });
 document.addEventListener("mouseout", e => { const x = e.target.closest("[data-mk],[data-li]"); if (x) hlNote(x.dataset.mk || x.dataset.li, false); });
 document.addEventListener("click", e => {
   const t = e.target.closest("button"); if (!t) return;
-  if (t.dataset.mk) { const li = document.querySelector(`[data-li="${t.dataset.mk}"]`); if (li) { li.scrollIntoView({ behavior: "smooth", block: "center" }); pulse(li); } return; }
+  if (t.dataset.mk) { hlNote(t.dataset.mk, true); return; }
   if (t.dataset.g) { current = t.dataset.g; render(); return; }
   if (t.dataset.step) { step = t.dataset.step; render(); return; }
   if (!canWrite && (t.dataset.vote || t.dataset.choose || t.dataset.del || t.dataset.fuse)) return;
