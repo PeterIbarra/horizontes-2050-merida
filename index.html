@@ -210,7 +210,8 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips span{font-size:12px;font-weight:700;background:var(--brand-soft);color:var(--ink);border-radius:999px;padding:4px 10px;border-left:4px solid var(--cc)}
 /* Trascendencia */
-.rueda{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;align-items:start}
+.rueda{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
+.rueda .panel{max-width:760px;width:100%;margin:0 auto}
 @media (max-width:980px){.rueda{grid-template-columns:minmax(0,1fr)}}
 .rueda>*{min-width:0}
 .wheelbox{position:relative;width:100%;max-width:720px;aspect-ratio:1/1;margin:0 auto}
@@ -224,6 +225,28 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);mar
 .y2050{display:inline-block;background:var(--brand);color:#fff;font-family:var(--display);font-weight:800;border-radius:6px;padding:1px 8px;font-size:13px;margin-right:6px;vertical-align:1px}
 .wlabel{position:absolute;transform:translate(-50%,-50%);font-family:var(--display);font-weight:800;font-size:20px;color:#0a3d6b;pointer-events:none}
 .sticky{position:absolute;transform:translate(-50%,-50%);width:104px;background:var(--tc);color:#fff;font-weight:700;border:2px solid #fff;border-radius:6px;padding:4px 6px;font-size:11px;line-height:1.25;box-shadow:0 2px 6px rgba(0,0,0,.28);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cw{width:100%}
+.band{border-radius:44px;padding:18px 18px 18px;display:grid;gap:12px;background:var(--ring-c)}
+.band.bb{background:var(--ring-b);border-radius:38px}
+.band.ba{background:var(--ring-a);border-radius:32px}
+.band .bq{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;justify-content:center;text-align:center}
+.band .bl{font-family:var(--display);font-weight:800;font-size:13px;color:#fff;background:var(--rcol);border-radius:999px;padding:3px 12px}
+.band.bc{--rcol:var(--nc)}.band.bb{--rcol:var(--nb)}.band.ba{--rcol:var(--na)}
+.band .bqq{font-family:var(--display);font-weight:700;font-size:15px;color:#0a2f52;max-width:70ch}
+.band .bct{font-size:12px;font-weight:700;color:#3d5b78}
+.band .none{text-align:center;font-size:13px;color:#3d5b78;margin:0}
+.nts{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:8px}
+.nt{display:flex;gap:8px;align-items:flex-start;background:var(--rcol);color:#fff;border-radius:10px;padding:8px 10px;font-size:13.5px;font-weight:600;line-height:1.35;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.nt .no{flex:none;min-width:28px;height:20px;border-radius:10px;background:rgba(255,255,255,.25);display:grid;place-items:center;font-family:var(--display);font-size:11px;font-weight:800;margin-top:1px}
+.nt .tx{flex:1;min-width:0;overflow-wrap:anywhere}
+.nt .who{display:block;font-size:11.5px;opacity:.85;margin-top:2px}
+.nt .tg{display:inline-block;margin-left:6px;font-size:10px;font-weight:800;border-radius:4px;padding:1px 6px;vertical-align:1px;background:#fff}
+.nt .tg.op{color:var(--ok)}.nt .tg.ri{color:var(--risk)}
+.nt button{border:0;background:none;color:rgba(255,255,255,.85);font-size:16px;line-height:1;padding:0 2px}
+.core{margin:4px auto;max-width:520px;width:100%;background:var(--center);color:#fff;border-radius:999px;padding:18px 24px;text-align:center;display:grid;gap:2px;font-family:var(--display)}
+.core .cid{font-size:13px;font-weight:800;opacity:.85}.core .cnm{font-size:16px;font-weight:800;line-height:1.25}.core .cy{font-size:28px;font-weight:900}.core .cnw{font-size:12px;font-weight:700}
+@media (max-width:640px){.band{padding:12px 8px;border-radius:26px}.band.bb{border-radius:22px}.band.ba{border-radius:18px}.band .bqq{font-size:13.5px}.core{border-radius:22px}}
+.lsd summary{cursor:pointer;font-weight:700;color:var(--brand);font-size:14px;margin-bottom:10px}
 .mk{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:var(--tc);color:#fff;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);font-family:var(--display);font-weight:800;font-size:11px;line-height:1;display:grid;place-items:center;padding:0;cursor:pointer;z-index:1}
 .mk.op{box-shadow:0 0 0 3px var(--ok),0 1px 4px rgba(0,0,0,.3)}.mk.ri{box-shadow:0 0 0 3px var(--risk),0 1px 4px rgba(0,0,0,.3)}
 .mk:hover,.mk:focus-visible,.mk.hl{transform:translate(-50%,-50%) scale(1.35);z-index:3}
@@ -380,12 +403,7 @@ footer{font-size:12px;color:var(--muted)}
       <div class="wbar" id="wbar"></div>
       <div class="r2050"><b>2050</b><span>Imaginemos que ya llegamos a 2050: ¿cómo es Venezuela si este clúster se vuelve la tendencia?</span></div>
       <div class="rueda">
-        <div class="wheelbox" id="wheel">
-          <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="99" style="fill:var(--ring-c);stroke:#b7d5ef;stroke-width:1"/><circle cx="100" cy="100" r="74" style="fill:var(--ring-b);stroke:#fff;stroke-width:1.6"/><circle cx="100" cy="100" r="48" style="fill:var(--ring-a);stroke:#fff;stroke-width:1.6"/><circle cx="100" cy="100" r="22" style="fill:var(--center);stroke:#fff;stroke-width:1.6"/></svg>
-          <div class="wlabel" style="left:50%;top:6.8%">c</div><div class="wlabel" style="left:50%;top:19.5%">b</div><div class="wlabel" style="left:50%;top:32.5%">a</div>
-          <div class="wcenter" id="wcenter"></div>
-          <div id="wnotes"></div>
-        </div>
+        <div class="cw" id="wheel"></div>
         <div class="panel">
           <h3>Agregar una idea</h3>
           <div class="seg ring" id="ringSeg"><button data-v="a" aria-pressed="true">a · País y Mérida</button><button data-v="b" aria-pressed="false">b · Juventud</button><button data-v="c" aria-pressed="false">c · Acciones</button></div>
@@ -400,9 +418,8 @@ footer{font-size:12px;color:var(--muted)}
           </form>
         </div>
       </div>
-      <p class="hint" style="font-style:normal">Cada punto de la rueda es una idea y su número coincide con las listas de abajo. Toca un punto para leerla. Borde verde: oportunidad; borde rojo: riesgo.</p>
       <div class="chips" id="wsel"></div>
-      <div class="lists" id="lists"></div>
+      <details class="lsd"><summary>Ver las ideas en tres columnas</summary><div class="lists" id="lists"></div></details>
       <div class="nubep" id="nubeG">
         <div class="hd"><div><h3>Así me imagino Venezuela para 2050</h3><div class="sub" id="nsubG">Escribe una palabra o frase corta. Las que más se repiten se ven más grandes.</div></div><button class="pill" data-proj="nubeG">Proyectar</button></div>
         <form class="cform" id="cform"><input id="ctext" maxlength="40" placeholder="Una palabra o frase corta" aria-label="Así me imagino Venezuela para 2050" autocomplete="off"><button class="pill primary" id="cadd">Enviar</button></form>
@@ -682,26 +699,21 @@ function renderRueda() {
   const g = state.groups[current], act = activeOf(g), c = byId[clusterOf(g, act)];
   renderWbar();
   const sl = selOf(current);
-  $("#wcenter").innerHTML = (c ? (() => { const cs = centerOf(g, act).map(x => byId[x]); return cs.length > 1 ? `<b>${cs.map(x => x.id).join(" + ")}</b><span class="fz">${cs.map(x => esc(x.n)).join(" + ")}</span><span class="y">→ 2050</span>` : `<b>${c.id}</b>${esc(c.n)}<span class="y">→ 2050</span>`; })() : "Elijan un clúster<br>en el paso 1") + (sl.length ? `<b style="margin-top:4px">+ ${sl.length} señal${sl.length > 1 ? "es" : ""} nueva${sl.length > 1 ? "s" : ""}</b>` : "");
   $("#wsel").innerHTML = sl.length ? `<span style="background:none;border:0;padding:4px 0;color:var(--muted)">Señales nuevas en la rueda:</span>` + sl.map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("") : "";
   $("#ringQ").innerHTML = `<span class="y2050">2050</span>` + esc(RINGQ[ring]);
   $("#actFields").hidden = ring !== "c";
   document.querySelectorAll("#ringSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === ring));
   const ns = notesOfW(current, act);
-  const box = $("#wheel"), S = box.clientWidth || 600, small = S < 520;
-  const TR = { a: [0.335, 0.425], b: [0.565, 0.685], c: [0.81, 0.93] };
-  let html = "";
-  ["a", "b", "c"].forEach((r, ri) => {
-    const items = ns.filter(([, n]) => n.anillo === r), k = items.length, two = k > (r === "a" ? 10 : r === "b" ? 16 : 24);
-    items.forEach(([id, n], i) => {
-      const ang = -Math.PI / 2 + (i + 0.5) * 2 * Math.PI / Math.max(k, 1) + ri * 0.21;
-      const rr = two ? TR[r][i % 2] : (TR[r][0] + TR[r][1]) / 2;
-      const x = 50 + rr * 50 * Math.cos(ang), y = 50 + rr * 50 * Math.sin(ang);
-      const tp = n.tipo === "oportunidad" ? " op" : n.tipo === "riesgo" ? " ri" : "";
-      html += `<button type="button" class="mk${tp}${fl(id)}" data-mk="${id}" style="left:${x}%;top:${y}%;--tc:var(--n${r})" title="${esc(n.texto)}" aria-label="${r}${i + 1}: ${esc(n.texto)}">${small ? "" : i + 1}</button>`;
-    });
-  });
-  $("#wnotes").innerHTML = html;
+  const cs = centerOf(g, act).map(x => byId[x]);
+  const core = cs.length ? `<div class="core"><span class="cid">${cs.map(x => x.id).join(" + ")}</span><span class="cnm">${cs.map(x => esc(x.n)).join(" + ")}</span><span class="cy">→ 2050</span>${sl.length ? `<span class="cnw">+ ${sl.length} señal${sl.length > 1 ? "es" : ""} nueva${sl.length > 1 ? "s" : ""}</span>` : ""}</div>` : `<div class="core"><span class="cnm">Elijan un clúster en el paso 1</span></div>`;
+  const RL = { a: "a · País y Mérida", b: "b · Juventud", c: "c · Acciones desde hoy" };
+  const card = (r, [id, n], i) => `<div class="nt${n.tipo === "oportunidad" ? " op" : n.tipo === "riesgo" ? " ri" : ""}${fl(id)}" data-li="${id}"><span class="no">${r}${i + 1}</span><span class="tx">${esc(n.texto)}${n.tipo === "oportunidad" ? `<span class="tg op">Oportunidad</span>` : n.tipo === "riesgo" ? `<span class="tg ri">Riesgo</span>` : ""}${n.tipo === "accion" ? `<span class="who">${esc(n.quien)} · ${esc(n.cuando)}</span>` : ""}</span>${canWrite ? `<button data-del="${id}" aria-label="Borrar nota">×</button>` : ""}</div>`;
+  const band = (r, inner) => {
+    const items = ns.filter(([, n]) => n.anillo === r), h = Math.ceil(items.length / 2);
+    const top = items.slice(0, h).map((x, i) => card(r, x, i)).join(""), bot = items.slice(h).map((x, i) => card(r, x, i + h)).join("");
+    return `<div class="band b${r}"><div class="bq"><span class="bl">${RL[r]}</span><span class="bqq"><span class="y2050">2050</span>${esc(RINGQ[r])}</span><span class="bct">${items.length} idea${items.length === 1 ? "" : "s"}</span></div>${top ? `<div class="nts">${top}</div>` : `<p class="none">Aún no hay ideas en este anillo.</p>`}${inner}${bot ? `<div class="nts">${bot}</div>` : ""}</div>`;
+  };
+  $("#wheel").innerHTML = band("c", band("b", band("a", core)));
   const lab = { a: "a · Consecuencias para Venezuela y Mérida", b: "b · Implicaciones para la juventud", c: "c · Acciones desde hoy" };
   const rc = { a: "var(--na)", b: "var(--nb)", c: "var(--nc)" };
   $("#lists").innerHTML = ["a", "b", "c"].map(r => {
