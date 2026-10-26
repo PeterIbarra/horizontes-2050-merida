@@ -345,7 +345,7 @@ footer{font-size:12px;color:var(--muted)}
     <button class="pill primary" id="relgo">Entrar</button><button class="pill" type="button" id="relcancel">Cancelar</button>
     <span class="msg" id="relmsg">Con el código, puedes crear grupos, votar, elegir el clúster, agregar señales y escribir la relatoría. El acceso queda guardado en este dispositivo.</span>
   </form>
-  <div class="robanner" id="robanner">Estás en <b>modo vista</b>: todo se actualiza en vivo. En <b>2 · Trascendencia</b> puedes sumar ideas a la rueda y escribir cómo te imaginas Venezuela para 2050. Los relatores entran con su código en <b>Acceso relator/a</b>.</div>
+  <div class="robanner" id="robanner">Estás en <b>modo vista</b>: todo se actualiza en vivo. En <b>2 · Trascendencia</b> puedes sumar ideas a la rueda. Los relatores entran con su código en <b>Acceso relator/a</b>.</div>
 
   <div class="steps" role="tablist">
     <button role="tab" data-step="0" aria-selected="true">Universo de señales<small>132</small></button>
@@ -436,7 +436,7 @@ footer{font-size:12px;color:var(--muted)}
       </div>
       <div class="chips" id="wsel"></div>
       <details class="lsd"><summary>Ver las ideas en tres columnas</summary><div class="lists" id="lists"></div></details>
-      <div class="nubep" id="nubeG">
+      <div class="nubep" id="nubeG" hidden style="display:none">
         <div class="hd"><div><h3>Así me imagino Venezuela para 2050</h3><div class="sub" id="nsubG">Escribe una palabra o frase corta. Las que más se repiten se ven más grandes.</div></div><button class="pill" data-proj="nubeG">Proyectar</button></div>
         <form class="cform" id="cform"><input id="ctext" maxlength="40" placeholder="Una palabra o frase corta" aria-label="Así me imagino Venezuela para 2050" autocomplete="off"><button class="pill primary" id="cadd">Enviar</button></form>
         <div class="cloud" id="cloudG" aria-live="polite"></div>
@@ -449,7 +449,7 @@ footer{font-size:12px;color:var(--muted)}
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="pill" id="expCsv">Descargar notas (CSV)</button><button class="pill" id="expMd">Descargar relatoría (Markdown)</button></div>
       </div>
       <div class="pgrid" id="pgrid"></div>
-      <div class="nubep" id="nubeA">
+      <div class="nubep" id="nubeA" hidden style="display:none">
         <div class="hd"><div><h3>Así me imagino Venezuela para 2050</h3><div class="sub" id="nsubA">Todos los grupos</div></div><button class="pill" data-proj="nubeA">Proyectar</button></div>
         <div class="cloud" id="cloudA" aria-live="polite"></div>
       </div>
@@ -785,7 +785,6 @@ function renderPlen() {
       <h3>${esc(g.nombre || "Grupo")}</h3>
       ${(() => { const tl = tally(id), top = CL.filter(k => tl[k.id]).sort((a, b) => tl[b.id] - tl[a.id]).slice(0, 3); return top.length ? `<div class="ct"><b>Más votados:</b> ${top.map(k => `${esc(k.n)} (${tl[k.id]} voto${tl[k.id] === 1 ? "" : "s"})`).join(" · ")}</div>` : ""; })()}
       ${selOf(id).length ? `<div class="chips">${selOf(id).map(k => { const s = state.senales[k], cc = byId[s.cluster]; return `<span style="--cc:${cc ? cc.col : "var(--brand)"}">${ncode(k)} · ${esc(s.nombre)}</span>`; }).join("")}</div>` : ""}
-      ${(() => { const nw = cloudWords(nubeOf(id)).slice(0, 6); return nw.length ? `<div class="ct"><b>Así se imaginan Venezuela:</b> ${nw.map(w => esc(w.txt)).join(" · ")}</div>` : ""; })()}
       ${g.porque ? `<details class="pqd"><summary>Por qué votaron así</summary><div class="pq">${porqueHtml(g, false)}</div></details>` : ""}
       ${ws.map(wheelHtml).join("")}
     </article>`;
@@ -921,7 +920,6 @@ function md() {
       });
     });
 
-    const nw = cloudWords(nubeOf(id)); if (nw.length) o += `**Así me imagino Venezuela para 2050:** ${nw.map(w => w.c > 1 ? `${w.txt} (${w.c})` : w.txt).join(", ")}\n\n`;
   });
   if (senalIds().length) {
     o += "## Señales nuevas propuestas por los grupos\n\n";
